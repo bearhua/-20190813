@@ -1,0 +1,16 @@
+{
+  "pages": [
+    "pages/login/login",
+    "pages/recentchat/recentchat",
+    "pages/contact/contact",
+    "partials/chating/chating",
+    "partials/historyFromCloud/historyFromCloud"
+  ],
+  "window": {
+    "backgroundColor": "#f0f0f0",
+    "navigationBarBackgroundColor": "#fff",
+    "navigationBarTitleText": "云信DEMO",
+    "navigationBarTextStyle": "black"
+  },
+  "sitemapLocation": "sitemap.json"
+}
