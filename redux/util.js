@@ -71,5 +71,5 @@ module.exports = {
   ActionTypes,
   warning,
   shallowEqual,
-  assign: assign
+  assign: assign//合并成对象
 }

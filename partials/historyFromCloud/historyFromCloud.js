@@ -83,7 +83,7 @@ let pageConfig = {
         historyAllDone: true
       })
     }
-    obj.msgs.map(item => dealGroupMsg.dealMsg(item, null, this.data.userInfo.account))
+    // obj.msgs.map(item => dealGroupMsg.dealMsg(item, null, this.data.userInfo.account))
     this.setData({
       endTime: obj.msgs[0] && obj.msgs[0].time || new Date().getTime()
     })

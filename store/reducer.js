@@ -440,6 +440,7 @@ let indexReducer = (state = INITIAL_STATE, action) => {
     case 'Reset_All_State': {
       let tempState = Object.assign({}, state)
       let keysArr = Object.keys(tempState)
+      console.log("========",keysArr)
       keysArr.map(item => {
         if (Array.isArray(tempState[item])) {
           tempState[item] = []

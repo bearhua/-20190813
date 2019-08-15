@@ -1,8 +1,9 @@
 import IMController from '../../controller/im.js'
 import { connect } from '../../redux/index.js'
+console.log(connect)
 let app = getApp()
 let store = app.store
-let pageConfig = {
+let pageConfig = {//页面的定义
   data: {
     account: '',// 用户输入账号
     password: ''//用户输入密码
@@ -56,17 +57,22 @@ let pageConfig = {
     })
   }
 }
-let mapStateToData = (state) => {
+let mapStateToData = (state) => {//定义要映射哪些state到页面
   return {
     isLogin: state.isLogin || store.getState().isLogin
   }
 }
-const mapDispatchToPage = (dispatch) => ({
+
+const mapDispatchToPage = (dispatch) => ({//定义要映射哪些方法到页面
   loginClick: function() {
     this.doLogin()
     return
   }
 })
-let connectedPageConfig = connect(mapStateToData, mapDispatchToPage)(pageConfig)
+let connectedPageConfig = connect(mapStateToData, mapDispatchToPage)(pageConfig)//使用connect将上述定义添加到pageConfig中。
 
-Page(connectedPageConfig)
+Page(connectedPageConfig)//注册小程序的页面
+//完成上述之后,你就可以在this.data中访问你在mapStateToData定义的数据了。
+
+//mapDispatchToPage定义的action会被映射到this对象上
+console.log(app.data);

@@ -3,12 +3,10 @@ import { assign, warning, shallowEqual } from './util.js'
 
 const defaultMapStateToProps = state => ({}) // eslint-disable-line no-unused-vars
 const defaultMapDispatchToProps = dispatch => ({ dispatch })
-
 function connect(mapStateToProps, mapDispatchToProps) {
   const shouldSubscribe = Boolean(mapStateToProps)
   const mapState = mapStateToProps || defaultMapStateToProps
   const app = getApp()
-
   let mapDispatch
   if (typeof mapDispatchToProps === 'function') {
     mapDispatch = mapDispatchToProps
@@ -22,6 +20,7 @@ function connect(mapStateToProps, mapDispatchToProps) {
       onLoad: _onLoad,
       onUnload: _onUnload,
     } = pageConfig
+    
     function handleChange(options) {
       if (!this.unsubscribe) {
         return
@@ -34,6 +33,7 @@ function connect(mapStateToProps, mapDispatchToProps) {
       this.setData(mappedState)
     }
     function onLoad(options) {
+      console.log(onLoad)
       this.store = app.store;
       if (!this.store) {
         warning("Store对象不存在!")

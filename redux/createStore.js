@@ -14,7 +14,6 @@ export default function createStore(reducer, preloadedState, enhancer) {
   if (typeof reducer !== 'function') {
     throw new Error('Expected the reducer to be a function.')
   }
-
   let currentReducer = reducer
   let currentState = preloadedState
   let currentListeners = []
@@ -79,7 +78,7 @@ export default function createStore(reducer, preloadedState, enhancer) {
   }
 
   function dispatch(action) {
-    if (!isPlainObject(action)) {
+    if (!isPlainObject(action)) {//是否为通过字面量形式或者new Object()形式定义的对象
       throw new Error(
         'Actions must be plain objects. ' +
         'Use custom middleware for async actions.'
@@ -96,7 +95,6 @@ export default function createStore(reducer, preloadedState, enhancer) {
     if (isDispatching) {
       throw new Error('Reducers may not dispatch actions.')
     }
-
     try {
       isDispatching = true
       currentState = currentReducer(currentState, action)
@@ -147,9 +145,9 @@ export default function createStore(reducer, preloadedState, enhancer) {
   dispatch({ type: ActionTypes.INIT })
 
   return {
-    dispatch,
+    dispatch,//更改数据状态
     subscribe,
-    getState,
+    getState,//获取数据
     replaceReducer
   }
 }

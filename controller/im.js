@@ -37,8 +37,8 @@ export default class IMController {
       onmutelist: this.onMutelist,
       onsyncmarkinmutelist: this.onMarkInMutelist,
       // 好友关系
-      onfriends: this.onFriends,
-      onsyncfriendaction: this.onSyncFriendAction,
+      // onfriends: this.onFriends,
+      // onsyncfriendaction: this.onSyncFriendAction,
       // // 用户名片
       onmyinfo: this.onMyInfo,
       onupdatemyinfo: this.onUpdateMyInfo,
@@ -47,17 +47,17 @@ export default class IMController {
       // 机器人列表的回调
       onrobots: this.onRobots,
       // 群组
-      onteams: this.onTeams,
-      onsynccreateteam: this.onCreateTeam,
-      onupdateteammember: this.onUpdateTeamMember,
-      onAddTeamMembers: this.onAddTeamMembers,
-      onRemoveTeamMembers: this.onRemoveTeamMembers,
-      onUpdateTeam: this.onUpdateTeam,
-      onUpdateTeamManagers: this.onUpdateTeamManagers,
-      onDismissTeam: this.onDismissTeam,
-      onTransferTeam: this.onTransferTeam,
-      onUpdateTeamMembersMute: this.onUpdateTeamMembersMute,
-      shouldCountNotifyUnread: this.shouldCountNotifyUnread,
+      // onteams: this.onTeams,
+      // onsynccreateteam: this.onCreateTeam,
+      // onupdateteammember: this.onUpdateTeamMember,
+      // onAddTeamMembers: this.onAddTeamMembers,
+      // onRemoveTeamMembers: this.onRemoveTeamMembers,
+      // onUpdateTeam: this.onUpdateTeam,
+      // onUpdateTeamManagers: this.onUpdateTeamManagers,
+      // onDismissTeam: this.onDismissTeam,
+      // onTransferTeam: this.onTransferTeam,
+      // onUpdateTeamMembersMute: this.onUpdateTeamMembersMute,
+      // shouldCountNotifyUnread: this.shouldCountNotifyUnread,
       // 会话
       onsessions: this.onSessions,
       onupdatesession: this.onUpdateSession,
@@ -66,16 +66,16 @@ export default class IMController {
       onofflinemsgs: this.onOfflineMsgs,
       onmsg: this.onMsg,
       // 系统通知
-      onofflinesysmsgs: this.onOfflineSysMsgs,
-      onsysmsg: this.onSysMsg,
-      onupdatesysmsg: this.onUpdateSysMsg,
-      onsysmsgunread: this.onSysMsgUnread,
-      onupdatesysmsgunread: this.onUpdateSysMsgUnread,
-      onofflinecustomsysmsgs: this.onOfflineCustomSysMsgs,
-      oncustomsysmsg: this.onCustomSysMsg,
+      // onofflinesysmsgs: this.onOfflineSysMsgs,
+      // onsysmsg: this.onSysMsg,
+      // onupdatesysmsg: this.onUpdateSysMsg,
+      // onsysmsgunread: this.onSysMsgUnread,
+      // onupdatesysmsgunread: this.onUpdateSysMsgUnread,
+      // onofflinecustomsysmsgs: this.onOfflineCustomSysMsgs,
+      // oncustomsysmsg: this.onCustomSysMsg,
       // 收到广播消息
-      onbroadcastmsg: this.onBroadcastMsg,
-      onbroadcastmsgs: this.onBroadcastMsgs,
+      // onbroadcastmsg: this.onBroadcastMsg,
+      // onbroadcastmsgs: this.onBroadcastMsgs,
       // 事件订阅
       onpushevents: this.onPushEvents,
     })
@@ -135,23 +135,23 @@ export default class IMController {
   /** 5
    * 同步好友信息，不含名片 [{account, createTime, updateTime}]
    */
-  onFriends(friends) {
-    console.log(orderCounter++, ' onFriends: ', friends)
-    store.dispatch({
-      type: 'FriendCard_Update_Initial',
-      payload: friends
-    })
-    if (app.globalData.ENVIRONMENT_CONFIG.openSubscription) {
-      app.globalData.nim.subscribeEvent({
-        type: 1, // 订阅用户登录状态事件
-        accounts: friends.map(item => item.account),
-        sync: true,
-        done: function (err, obj) {
-          console.log(err, obj)
-        }
-      })
-    }
-  }
+  // onFriends(friends) {
+  //   console.log(orderCounter++, ' onFriends: ', friends)
+  //   store.dispatch({
+  //     type: 'FriendCard_Update_Initial',
+  //     payload: friends
+  //   })
+  //   if (app.globalData.ENVIRONMENT_CONFIG.openSubscription) {
+  //     app.globalData.nim.subscribeEvent({
+  //       type: 1, // 订阅用户登录状态事件
+  //       accounts: friends.map(item => item.account),
+  //       sync: true,
+  //       done: function (err, obj) {
+  //         console.log(err, obj)
+  //       }
+  //     })
+  //   }
+  // }
   /** 6
    * 个人名片：存储个人信息到全局数据
    */
@@ -175,14 +175,15 @@ export default class IMController {
   /** 8 同步群列表
    * onTeams
    */
-  onTeams(teams) {
-    console.log(orderCounter++, 'onTeams')
-    console.log(teams)
-    store.dispatch({
-      type: 'Init_Groups',
-      payload: teams
-    })
-  }
+  // onTeams(teams) {
+  //   console.log(orderCounter++, 'onTeams')
+  //   console.log(teams)
+  //   store.dispatch({
+  //     type: 'Init_Groups',
+  //     payload: teams
+  //   })
+  // }
+     
   /** 9
    * onSyncDone,同步完成
    */
@@ -368,10 +369,10 @@ export default class IMController {
     console.log(obj)
   }
 
-  onSyncFriendAction(obj) {
-    console.log(orderCounter++, ' onSyncFriendAction')
-    console.log(obj)
-  }
+  // onSyncFriendAction(obj) {
+  //   console.log(orderCounter++, ' onSyncFriendAction')
+  //   console.log(obj)
+  // }
 
   onUpdateMyInfo(user) {
     console.log(orderCounter++, ' onUpdateMyInfo')
@@ -386,102 +387,102 @@ export default class IMController {
   /**
   *   创建群的回调, 此方法接收一个参数, 包含群信息和群主信息
   */
-  onCreateTeam(team) {
-    console.log(orderCounter++, ' onCreateTeam')
-    store.dispatch({
-      type: 'Add_Group',
-      payload: team
-    })
-  }
+  // onCreateTeam(team) {
+  //   console.log(orderCounter++, ' onCreateTeam')
+  //   store.dispatch({
+  //     type: 'Add_Group',
+  //     payload: team
+  //   })
+  // }
   /**
   *  群成员信息更新后的回调, 会传入群成员对象, 不过此时的信息是不完整的, 只会包括被更新的字段。当前登录帐号在其它端修改自己的群属性时也会收到此回调。
   */
-  onUpdateTeamMember(teamMember) {
-    console.log(orderCounter++, 'onUpdateTeamMember')
-    store.dispatch({
-      type: 'Update_Group_Member',
-      payload: teamMember
-    })
-  }
+  // onUpdateTeamMember(teamMember) {
+  //   console.log(orderCounter++, 'onUpdateTeamMember')
+  //   store.dispatch({
+  //     type: 'Update_Group_Member',
+  //     payload: teamMember
+  //   })
+  // }
   /**
   *  新成员入群的回调，自己建群成功也回调
   */
-  onAddTeamMembers(msg) {
-    console.log(orderCounter++, 'onAddTeamMembers')
-    store.dispatch({
-      type: 'Add_Group_Members',
-      payload: msg
-    })
-  }
+  // onAddTeamMembers(msg) {
+  //   console.log(orderCounter++, 'onAddTeamMembers')
+  //   store.dispatch({
+  //     type: 'Add_Group_Members',
+  //     payload: msg
+  //   })
+  // }
   /**
   *  有人出群的回调
   */
-  onRemoveTeamMembers(msg) {
-    console.log(orderCounter++, 'onRemoveTeamMembers')
-    store.dispatch({
-      type: 'Del_Group_Member',
-      payload: msg
-    })
-  }
+  // onRemoveTeamMembers(msg) {
+  //   console.log(orderCounter++, 'onRemoveTeamMembers')
+  //   store.dispatch({
+  //     type: 'Del_Group_Member',
+  //     payload: msg
+  //   })
+  // }
   /**
   *  更新群的回调
   */
-  onUpdateTeam(msg) {
-    console.log(orderCounter++, 'onUpdateTeam')
-    store.dispatch({
-      type: 'Update_Group',
-      payload: msg
-    })
-  }
+  // onUpdateTeam(msg) {
+  //   console.log(orderCounter++, 'onUpdateTeam')
+  //   store.dispatch({
+  //     type: 'Update_Group',
+  //     payload: msg
+  //   })
+  // }
   /**
   *  更新群管理员的回调
   */
-  onUpdateTeamManagers(msg) {
-    console.log(orderCounter++, 'onUpdateTeamManagers')
-    store.dispatch({
-      type: 'Update_Group_Member_Manager',
-      payload: msg
-    })
-  }
+  // onUpdateTeamManagers(msg) {
+  //   console.log(orderCounter++, 'onUpdateTeamManagers')
+  //   store.dispatch({
+  //     type: 'Update_Group_Member_Manager',
+  //     payload: msg
+  //   })
+  // }
   /**
   *  解散群的回调
   */
-  onDismissTeam(msg) {
-    console.log(orderCounter++, 'onDismissTeam')
-    store.dispatch({
-      type: 'Del_Group',
-      payload: msg
-    })
-  }
+  // onDismissTeam(msg) {
+  //   console.log(orderCounter++, 'onDismissTeam')
+  //   store.dispatch({
+  //     type: 'Del_Group',
+  //     payload: msg
+  //   })
+  // }
   /**
   *  移交群的回调
   */
-  onTransferTeam(msg) {
-    console.log(orderCounter++, 'onTransferTeam')
-    store.dispatch({
-      type: 'Update_Group_Owner',
-      payload: msg
-    })
-  }
+  // onTransferTeam(msg) {
+  //   console.log(orderCounter++, 'onTransferTeam')
+  //   store.dispatch({
+  //     type: 'Update_Group_Owner',
+  //     payload: msg
+  //   })
+  // }
   /**
   *  更新群成员禁言状态的回调
   */
-  onUpdateTeamMembersMute(msg) {
-    console.log(orderCounter++, 'onUpdateTeamMembersMute')
-    store.dispatch({
-      type: 'Add_Group_Members',
-      payload: msg
-    })
-  }
+  // onUpdateTeamMembersMute(msg) {
+  //   console.log(orderCounter++, 'onUpdateTeamMembersMute')
+  //   store.dispatch({
+  //     type: 'Add_Group_Members',
+  //     payload: msg
+  //   })
+  // }
   /**
   *  群消息通知是否加入未读数开关如果返回true，则计入未读数，否则不计入
   */
-  shouldCountNotifyUnread(msg) {
-    console.log(orderCounter++, 'shouldCountNotifyUnread')
-    console.log(msg)
+  // shouldCountNotifyUnread(msg) {
+  //   console.log(orderCounter++, 'shouldCountNotifyUnread')
+  //   console.log(msg)
 
-    return true
-  }
+  //   return true
+  // }
   /**会话
    * [ {id:"p2p-liuxuanlin",lastMsg:{from:'wujie',text:'222',to:"liuxuanlin"}} ]
    */
@@ -501,11 +502,11 @@ export default class IMController {
     })
   }
   // 系统通知
-  onOfflineSysMsgs(msg) {
-    console.log(orderCounter++, ' onOfflineSysMsgs')
-    console.log(msg)
-    msg.map(item => dealMsg(item, store, app))
-  }
+  // onOfflineSysMsgs(msg) {
+  //   console.log(orderCounter++, ' onOfflineSysMsgs')
+  //   console.log(msg)
+  //   msg.map(item => dealMsg(item, store, app))
+  // }
   onUpdateSysMsg(sysMsg) {
     console.log(orderCounter++, ' onUpdateSysMsg')
     console.log(sysMsg)

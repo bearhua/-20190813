@@ -1,6 +1,7 @@
 {
   "pages": [
     "pages/login/login",
+    "pages/index/index",
     "pages/recentchat/recentchat",
     "pages/contact/contact",
     "partials/chating/chating",
@@ -11,6 +12,18 @@
     "navigationBarBackgroundColor": "#fff",
     "navigationBarTitleText": "云信DEMO",
     "navigationBarTextStyle": "black"
+  },
+  "tabBar": {
+    "list": [
+      {
+        "pagePath": "pages/login/login",
+        "text": "消息"
+      },
+      {
+        "pagePath": "pages/index/index",
+        "text": "首页"
+      }
+    ]
   },
   "sitemapLocation": "sitemap.json"
 }
