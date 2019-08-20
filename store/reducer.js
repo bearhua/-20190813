@@ -1,7 +1,8 @@
 import {INITIAL_STATE} from './store.js'
 import dealGroupMsg from '../utils/dealGroupMsg.js'
-let app = getApp()
+// let app = getApp()
 let indexReducer = (state = INITIAL_STATE, action) => {
+  const app = getApp()
   switch (action.type) {
     // IM：收到个人信息
     case 'IM_OnMyInfo':{
@@ -22,59 +23,59 @@ let indexReducer = (state = INITIAL_STATE, action) => {
       })
     }
     // Register：开始注册，转菊花
-    case 'Register_StartRegister': {
-      return Object.assign({}, state, {
-        isRegister: true
-      })
-    }
-    // Register：注册成功，停止转菊花
-    case 'Register_RegisterSuccess': {
-      return Object.assign({}, state, {
-        isRegister: false
-      })
-    }
+    // case 'Register_StartRegister': {
+    //   return Object.assign({}, state, {
+    //     isRegister: true
+    //   })
+    // }
+    // // Register：注册成功，停止转菊花
+    // case 'Register_RegisterSuccess': {
+    //   return Object.assign({}, state, {
+    //     isRegister: false
+    //   })
+    // }
     // UserInfo：个人更新头像
-    case 'UserInfo_Update_Avatar': {
-      let temp = Object.assign({}, state)
-      temp.userInfo['avatar'] = action.payload
-      return Object.assign({}, state, temp)
-    }
+    // case 'UserInfo_Update_Avatar': {
+    //   let temp = Object.assign({}, state)
+    //   temp.userInfo['avatar'] = action.payload
+    //   return Object.assign({}, state, temp)
+    // }
     // UserInfo：个人更新昵称
-    case 'UserInfo_Update_Nick': {
-      let temp = Object.assign({}, state)
-      temp.userInfo['nick'] = action.payload
-      return Object.assign({}, state, temp)
-    }
+    // case 'UserInfo_Update_Nick': {
+    //   let temp = Object.assign({}, state)
+    //   temp.userInfo['nick'] = action.payload
+    //   return Object.assign({}, state, temp)
+    // }
     // UserInfo：个人更新性别
-    case 'UserInfo_Update_Gender': {
-      let temp = Object.assign({}, state)
-      temp.userInfo['gender'] = action.payload
-      return Object.assign({}, state, temp)
-    }
+    // case 'UserInfo_Update_Gender': {
+    //   let temp = Object.assign({}, state)
+    //   temp.userInfo['gender'] = action.payload
+    //   return Object.assign({}, state, temp)
+    // }
     // UserInfo：个人更新生日
-    case 'UserInfo_Update_Birthday': {
-      let temp = Object.assign({}, state)
-      temp.userInfo['birth'] = action.payload
-      return Object.assign({}, state, temp)
-    }
+    // case 'UserInfo_Update_Birthday': {
+    //   let temp = Object.assign({}, state)
+    //   temp.userInfo['birth'] = action.payload
+    //   return Object.assign({}, state, temp)
+    // }
     // UserInfo：个人更新电话
-    case 'UserInfo_Update_Tel': {
-      let temp = Object.assign({}, state)
-      temp.userInfo['tel'] = action.payload
-      return Object.assign({}, state, temp)
-    }
+    // case 'UserInfo_Update_Tel': {
+    //   let temp = Object.assign({}, state)
+    //   temp.userInfo['tel'] = action.payload
+    //   return Object.assign({}, state, temp)
+    // }
     // UserInfo：个人更新邮箱
-    case 'UserInfo_Update_Email': {
-      let temp = Object.assign({}, state)
-      temp.userInfo['email'] = action.payload
-      return Object.assign({}, state, temp)
-    }
+    // case 'UserInfo_Update_Email': {
+    //   let temp = Object.assign({}, state)
+    //   temp.userInfo['email'] = action.payload
+    //   return Object.assign({}, state, temp)
+    // }
     // UserInfo：个人更新签名
-    case 'UserInfo_Update_Sign': {
-      let temp = Object.assign({}, state)
-      temp.userInfo['sign'] = action.payload
-      return Object.assign({}, state, temp)
-    }
+    // case 'UserInfo_Update_Sign': {
+    //   let temp = Object.assign({}, state)
+    //   temp.userInfo['sign'] = action.payload
+    //   return Object.assign({}, state, temp)
+    // }
     // CurrentChatTo：登录用户的聊天对象改变
     case 'CurrentChatTo_Change': {
       let temp = Object.assign({}, state)
@@ -85,6 +86,7 @@ let indexReducer = (state = INITIAL_STATE, action) => {
     case 'FriendCard_Update_Initial': { // 初始化好友卡片
       let friends = action.payload
       let temp = Object.assign({}, state)
+      console.log(temp)
       friends.map(friend => {
         // 设置默认好友登录状态
         if (!temp.friendCard[friend.account]) {
@@ -111,18 +113,18 @@ let indexReducer = (state = INITIAL_STATE, action) => {
       return Object.assign({}, state, tempState)
     }
     // FriendCard：更新非好友名片信息(搜索时存进来)，携带名片数据
-    case 'FriendCard_Update_NonFriendInfoCard': {
-      let tempState = Object.assign({}, state)
-      let card = action.payload
-      // 触发状态更新时friendCard可能为空
-      if (!tempState.friendCard[card.account]) {
-        tempState.friendCard[card.account] = {}
-      }
-      card.isFriend = false
-      tempState.friendCard[card.account] = Object.assign({}, tempState.friendCard[card.account], card)
-      tempState.personList[card.account] = Object.assign({}, tempState.personList[card.account], card)
-      return Object.assign({}, state, tempState)
-    }
+    // case 'FriendCard_Update_NonFriendInfoCard': {
+    //   let tempState = Object.assign({}, state)
+    //   let card = action.payload
+    //   // 触发状态更新时friendCard可能为空
+    //   if (!tempState.friendCard[card.account]) {
+    //     tempState.friendCard[card.account] = {}
+    //   }
+    //   card.isFriend = false
+    //   tempState.friendCard[card.account] = Object.assign({}, tempState.friendCard[card.account], card)
+    //   tempState.personList[card.account] = Object.assign({}, tempState.personList[card.account], card)
+    //   return Object.assign({}, state, tempState)
+    // }
     // FriendCard：更新指定好友在线状态
     case 'FriendCard_Update_Online_Status': {
       let tempState = Object.assign({}, state)
@@ -138,55 +140,55 @@ let indexReducer = (state = INITIAL_STATE, action) => {
       return Object.assign({}, state, tempState)
     }
     // FriendCard：删除好友，依据account
-    case 'FriendCard_Delete_By_Account': {
-      let tempState = Object.assign({}, state)
-      let account = action.payload
-      delete tempState.friendCard[account]
-      // todo 暂时先不删除，暂存删除好友前的在线状态
-      // if (tempState.onlineList[account]) {
-      //   delete tempState.onlineList[account]
-      // }
-      return Object.assign({}, state, tempState)
-    }
+    // case 'FriendCard_Delete_By_Account': {
+    //   let tempState = Object.assign({}, state)
+    //   let account = action.payload
+    //   delete tempState.friendCard[account]
+    //   // todo 暂时先不删除，暂存删除好友前的在线状态
+    //   // if (tempState.onlineList[account]) {
+    //   //   delete tempState.onlineList[account]
+    //   // }
+    //   return Object.assign({}, state, tempState)
+    // }
     // FriendCard：添加好友
-    case 'FriendCard_Add_Friend': {
-      let tempState = Object.assign({}, state)
-      let card = action.payload
-      card.isFriend = true // 标记好友
-      card.status = '离线' // 默认状态是离线
-      tempState.friendCard = Object.assign({}, tempState.friendCard)
-      tempState.friendCard[card.account] = Object.assign({}, tempState.friendCard[card.account], card)
-      return Object.assign({}, state, tempState)
-    }
+    // case 'FriendCard_Add_Friend': {
+    //   let tempState = Object.assign({}, state)
+    //   let card = action.payload
+    //   card.isFriend = true // 标记好友
+    //   card.status = '离线' // 默认状态是离线
+    //   tempState.friendCard = Object.assign({}, tempState.friendCard)
+    //   tempState.friendCard[card.account] = Object.assign({}, tempState.friendCard[card.account], card)
+    //   return Object.assign({}, state, tempState)
+    // }
     // Blacklist：登录成功后获取的初始化黑名单
-    case 'Blacklist_Update_Initial': {
-      // 发送来了黑名单就在好友名片信息中添加标志位
-      let tempState = Object.assign({}, state)
-      let blacklist = action.payload // [{account}, invalid: []]
-      blacklist.map(item => {
-        // 触发黑名单时friendCard为空
-        if (item.account) {
-          if (!tempState.friendCard[item.account]) {
-            tempState.friendCard[item.account] = {}
-            tempState.friendCard[item.account].isFriend = false //没有任何用户信息，非好友状态下拉黑
-          }
-          tempState.friendCard[item.account].isBlack = true
-        }
-      })
-      return Object.assign({}, state, tempState)
-    }
+    // case 'Blacklist_Update_Initial': {
+    //   // 发送来了黑名单就在好友名片信息中添加标志位
+    //   let tempState = Object.assign({}, state)
+    //   let blacklist = action.payload // [{account}, invalid: []]
+    //   blacklist.map(item => {
+    //     // 触发黑名单时friendCard为空
+    //     if (item.account) {
+    //       if (!tempState.friendCard[item.account]) {
+    //         tempState.friendCard[item.account] = {}
+    //         tempState.friendCard[item.account].isFriend = false //没有任何用户信息，非好友状态下拉黑
+    //       }
+    //       tempState.friendCard[item.account].isBlack = true
+    //     }
+    //   })
+    //   return Object.assign({}, state, tempState)
+    // }
     // Blacklist：拉黑或取消拉黑
-    case 'Blacklist_Update_MarkInBlacklist': {
-      let tempState = Object.assign({}, state)
-      let blackUser = action.payload // {account, isBlack, addTime}
-      tempState.friendCard = Object.assign({}, tempState.friendCard)
-      if (!tempState.friendCard[blackUser.account]) {
-        tempState.friendCard[blackUser.account] = {}
-      }
-      tempState.friendCard[blackUser.account].isBlack = blackUser.isBlack
-      tempState.friendCard[blackUser.account].addTime = blackUser.addTime
-      return Object.assign({}, state, tempState)
-    }
+    // case 'Blacklist_Update_MarkInBlacklist': {
+    //   let tempState = Object.assign({}, state)
+    //   let blackUser = action.payload // {account, isBlack, addTime}
+    //   tempState.friendCard = Object.assign({}, tempState.friendCard)
+    //   if (!tempState.friendCard[blackUser.account]) {
+    //     tempState.friendCard[blackUser.account] = {}
+    //   }
+    //   tempState.friendCard[blackUser.account].isBlack = blackUser.isBlack
+    //   tempState.friendCard[blackUser.account].addTime = blackUser.addTime
+    //   return Object.assign({}, state, tempState)
+    // }
     // RawMessageList：存储原始消息
     case 'RawMessageList_Add_Msg': {
       /*
@@ -221,20 +223,23 @@ let indexReducer = (state = INITIAL_STATE, action) => {
       let { msg, nim } = action.payload
       tempState.rawMessageList = Object.assign({}, tempState.rawMessageList)
       // 自己的退群消息就不记录、展示了
-      if (msg && msg.type === 'notification') { // 群通知消息  && msg.scene === 'team'
-        if ((msg.attach.type === 'leaveTeam' || msg.attach.type ===  'dismissTeam') && msg.from === tempState.userInfo.account) {
-          return tempState
-        }
-        dealGroupMsg.dealMsg(msg, tempState, tempState.userInfo.account)
-      }
+      // if (msg && msg.type === 'notification') { // 群通知消息  && msg.scene === 'team'
+      //   if ((msg.attach.type === 'leaveTeam' || msg.attach.type ===  'dismissTeam') && msg.from === tempState.userInfo.account) {
+      //     return tempState
+      //   }
+      //   dealGroupMsg.dealMsg(msg, tempState, tempState.userInfo.account)
+      // }
       let sessionId = msg.sessionId
       if (!tempState.rawMessageList[sessionId]) {
         tempState.rawMessageList[sessionId] = {}
       }
       tempState.rawMessageList[sessionId][msg.time] = Object.assign({}, msg)
-      if (tempState.currentChatTo === msg.sessionId && nim) { // 当前会话
+      if (tempState.currentChatTo === msg.sessionId && nim) { // 当前会话,将未读数置为0
         nim.resetSessionUnread(msg.sessionId)
       }
+      let app = getApp()
+      console.log(app)
+      console.log('RawMessageList_Add_Msg', tempState.rawMessageList)
       return Object.assign({}, state, tempState)
     }
     // RawMessageList：存储漫游消息
@@ -247,9 +252,9 @@ let indexReducer = (state = INITIAL_STATE, action) => {
         if (!tempState.rawMessageList[sessionId]) {
           tempState.rawMessageList[sessionId] = {}
         }
-        if (msg.type === 'notification') { // 群通知消息  && msg.scene === 'team'
-          dealGroupMsg.dealMsg(msg, null, tempState.userInfo.account)
-        }
+        // if (msg.type === 'notification') { // 群通知消息  && msg.scene === 'team'
+        //   dealGroupMsg.dealMsg(msg, null, tempState.userInfo.account)
+        // }
         tempState.rawMessageList[sessionId][msg.time] = Object.assign({}, msg)
       })
       console.log('rawMessageList', tempState.rawMessageList)
@@ -269,14 +274,14 @@ let indexReducer = (state = INITIAL_STATE, action) => {
       return Object.assign({}, state, tempState)
     }
     // RawMessageList：替换其中的指定消息
-    case 'RawMessageList_Replace_Message': {
-      let tempState = Object.assign({}, state)
-      let msg = action.payload
-      let sessionId = msg.sessionId
-      tempState.rawMessageList = Object.assign({}, tempState.rawMessageList)
-      tempState.rawMessageList[sessionId][msg.time] = Object.assign({}, msg)
-      return Object.assign({}, state, tempState)
-    }
+    // case 'RawMessageList_Replace_Message': {
+    //   let tempState = Object.assign({}, state)
+    //   let msg = action.payload
+    //   let sessionId = msg.sessionId
+    //   tempState.rawMessageList = Object.assign({}, tempState.rawMessageList)
+    //   tempState.rawMessageList[sessionId][msg.time] = Object.assign({}, msg)
+    //   return Object.assign({}, state, tempState)
+    // }
     // RawMessageList：自己撤回消息
     case 'RawMessageList_Recall_Msg': {
       let tempState = Object.assign({}, state)
@@ -302,96 +307,96 @@ let indexReducer = (state = INITIAL_STATE, action) => {
         type: 'tip',
         tip: `${deleteInfo.deletedMsgFromNick}撤回了一条消息`,
         time: deleteInfo.time
-      }) // 修改删除的消息主体内容后存储到全局
+      }) // 修改删除的消息主体内容后存储到全局  
       delete tempState.rawMessageList[sessionId][deleteInfo.deletedMsgTime] // 删除老的消息
       return Object.assign({}, state, tempState)
     }
     // Notification：对端将你添加为好友
-    case 'Notification_Opposite_AddFriend': {
-      let tempState = Object.assign({}, state)
-      let payload = action.payload
-      payload.type = 'p2p'
-      tempState.notificationList.system.push(payload)
-      return Object.assign({}, state, tempState)
-    }
+    // case 'Notification_Opposite_AddFriend': {
+    //   let tempState = Object.assign({}, state)
+    //   let payload = action.payload
+    //   payload.type = 'p2p'
+    //   tempState.notificationList.system.push(payload)
+    //   return Object.assign({}, state, tempState)
+    // }
     // Notification：对端将你从好友列表中删除
-    case 'Notification_Opposite_DeleteFriend': {
-      let tempState = Object.assign({}, state)
-      let payload = action.payload
-      payload.type = 'p2p'
-      tempState.notificationList.system.push(payload)
-      return Object.assign({}, state, tempState)
-    }
+    // case 'Notification_Opposite_DeleteFriend': {
+    //   let tempState = Object.assign({}, state)
+    //   let payload = action.payload
+    //   payload.type = 'p2p'
+    //   tempState.notificationList.system.push(payload)
+    //   return Object.assign({}, state, tempState)
+    // }
     // Notification：收到入群邀请
-    case 'Notification_Team_Invite': {
-      let tempState = Object.assign({}, state)
-      let payload = action.payload
-      payload.type = 'team'
-      payload.teamAction = 'invite'
-      payload.idServer = payload.msg.idServer
-      payload.teamId = payload.msg.attach.team.teamId
-      payload.from = payload.msg.from
-      tempState.notificationList.system.push(payload)
-      return Object.assign({}, state, tempState)
-    }
+    // case 'Notification_Team_Invite': {
+    //   let tempState = Object.assign({}, state)
+    //   let payload = action.payload
+    //   payload.type = 'team'
+    //   payload.teamAction = 'invite'
+    //   payload.idServer = payload.msg.idServer
+    //   payload.teamId = payload.msg.attach.team.teamId
+    //   payload.from = payload.msg.from
+    //   tempState.notificationList.system.push(payload)
+    //   return Object.assign({}, state, tempState)
+    // }
     // Notification：收到入群申请
-    case 'Notification_Team_Apply': {
-      let tempState = Object.assign({}, state)
-      let payload = action.payload
-      payload.type = 'team'
-      payload.teamAction = 'apply'
-      payload.idServer = payload.msg.idServer
-      payload.teamId = payload.msg.to
-      payload.from = payload.msg.from
-      payload.desc += '“' + (tempState.groupList[payload.teamId] && tempState.groupList[payload.teamId].name) + '”'
-      tempState.notificationList.system.push(payload)
-      return Object.assign({}, state, tempState)
-    }
+    // case 'Notification_Team_Apply': {
+    //   let tempState = Object.assign({}, state)
+    //   let payload = action.payload
+    //   payload.type = 'team'
+    //   payload.teamAction = 'apply'
+    //   payload.idServer = payload.msg.idServer
+    //   payload.teamId = payload.msg.to
+    //   payload.from = payload.msg.from
+    //   payload.desc += '“' + (tempState.groupList[payload.teamId] && tempState.groupList[payload.teamId].name) + '”'
+    //   tempState.notificationList.system.push(payload)
+    //   return Object.assign({}, state, tempState)
+    // }
     // Notification：入群邀请反馈信息
-    case 'Update_Sys_Msg': {
-      let tempState = Object.assign({}, state)
-      let payload = action.payload
-      let array = tempState.notificationList.system
-      for (let i = 0; i < array.length; i++) {
-        if (array[i].idServer === payload.idServer) {
-          array[i].state = payload.state === 'rejected' ? '已拒绝' : (payload.state === 'passed' ? '已接受' : '')
-          return Object.assign({}, state, tempState)
-        }
-      }
-    }
+    // case 'Update_Sys_Msg': {
+    //   let tempState = Object.assign({}, state)
+    //   let payload = action.payload
+    //   let array = tempState.notificationList.system
+    //   for (let i = 0; i < array.length; i++) {
+    //     if (array[i].idServer === payload.idServer) {
+    //       array[i].state = payload.state === 'rejected' ? '已拒绝' : (payload.state === 'passed' ? '已接受' : '')
+    //       return Object.assign({}, state, tempState)
+    //     }
+    //   }
+    // }
     // Notification：对端将你从好友列表中删除
-    case 'Notification_Team_Del': {
+    // case 'Notification_Team_Del': {
       // let tempState = Object.assign({}, state)
       // let payload = action.payload
       // tempState.notificationList.system.push(payload)
       // return Object.assign({}, state, tempState)
-    }
+    // }
     // Notification：清除指定条目的系统消息通知
-    case 'Notification_Delete_Specified_System_By_Index': {
-      let tempState = Object.assign({}, state)
-      let index = action.payload
-      tempState.notificationList.system.splice(index, 1)
-      return Object.assign({}, state, tempState)
-    }
+    // case 'Notification_Delete_Specified_System_By_Index': {
+    //   let tempState = Object.assign({}, state)
+    //   let index = action.payload
+    //   tempState.notificationList.system.splice(index, 1)
+    //   return Object.assign({}, state, tempState)
+    // }
     // Notification：清除指定条目的系统消息通知
-    case 'Notification_Delete_Specified_Custom_By_Index': {
-      let tempState = Object.assign({}, state)
-      let index = action.payload
-      tempState.notificationList.custom.splice(index, 1)
-      return Object.assign({}, state, tempState)
-    }
+    // case 'Notification_Delete_Specified_Custom_By_Index': {
+    //   let tempState = Object.assign({}, state)
+    //   let index = action.payload
+    //   tempState.notificationList.custom.splice(index, 1)
+    //   return Object.assign({}, state, tempState)
+    // }
     // Notification：清除系统消息通知
-    case 'Notification_Clear_System': {
-      let tempState = Object.assign({}, state)
-      tempState.notificationList.system = []
-      return Object.assign({}, state, tempState)
-    }
+    // case 'Notification_Clear_System': {
+    //   let tempState = Object.assign({}, state)
+    //   tempState.notificationList.system = []
+    //   return Object.assign({}, state, tempState)
+    // }
     // Notification：清除自定义消息通知
-    case 'Notification_Clear_Custom': {
-      let tempState = Object.assign({}, state)
-      tempState.notificationList.custom = []
-      return Object.assign({}, state, tempState)
-    }
+    // case 'Notification_Clear_Custom': {
+    //   let tempState = Object.assign({}, state)
+    //   tempState.notificationList.custom = []
+    //   return Object.assign({}, state, tempState)
+    // }
     // Notification：清除系统消息通知、自定义消息通知
     case 'Notification_Clear_All': {
       let tempState = Object.assign({}, state)
@@ -403,17 +408,28 @@ let indexReducer = (state = INITIAL_STATE, action) => {
       let tempState = Object.assign({}, state)
       let updateSession = action.payload
       tempState.unreadInfo[updateSession.id] = updateSession.unread
+      
+      //House365 总未读数更新
+      let unreadTotal = 0;
+      for (let item in tempState.unreadInfo) {
+        unreadTotal += parseInt(tempState.unreadInfo[item])
+      }
+      app.setTotalUnread(unreadTotal);
+      console.log('更新未读数', tempState.unreadInfo, unreadTotal)
       return Object.assign({}, state, tempState)
     }
     // UnreadInfo：更新群未读数
     case 'SessionUnreadInfo_update': {
       let tempState = Object.assign({}, state)
       let sessions = action.payload
+      let unreadTotal = 0;// House365 初始化总未读数
       sessions.map(item => {
         if (item.unread) {
           tempState.unreadInfo[item.id] = item.unread
+          unreadTotal += item.unread
         }
       })
+      app.setTotalUnread(unreadTotal);
       return Object.assign({}, state, tempState)
     }
     // Delete：清除与指定人的所有聊天记录
@@ -614,28 +630,28 @@ let indexReducer = (state = INITIAL_STATE, action) => {
       return Object.assign({}, state, tempState)
     }
     // 多人通话呼叫列表
-    case 'Netcall_Call_UserList': {
-      let tempState = Object.assign({}, state)
-      let userList = action.payload // [{account,nick,avatar}]
-      tempState.netcallCallList = Object.assign([], userList)
-      return Object.assign({}, state, tempState)
-    }
-    case 'Netcall_Call_Clear_UserList_Url': {
-      let tempState = Object.assign({}, state)
-      tempState.netcallCallList.map(user => {
-        if (user.url) {
-          user.url = ''
-        }
-      })
-      return Object.assign({}, state, tempState)
-    }
+    // case 'Netcall_Call_UserList': {
+    //   let tempState = Object.assign({}, state)
+    //   let userList = action.payload // [{account,nick,avatar}]
+    //   tempState.netcallCallList = Object.assign([], userList)
+    //   return Object.assign({}, state, tempState)
+    // }
+    // case 'Netcall_Call_Clear_UserList_Url': {
+    //   let tempState = Object.assign({}, state)
+    //   tempState.netcallCallList.map(user => {
+    //     if (user.url) {
+    //       user.url = ''
+    //     }
+    //   })
+    //   return Object.assign({}, state, tempState)
+    // }
     // 收到自定义消息，群视频呼叫标记
-    case 'Netcall_Set_GroupCall': {
-      let tempState = Object.assign({}, state)
-      let groupCall = action.payload // {apnsText,content:{id,members,teamId,room,type},from,to}
-      tempState.netcallGroupCallInfo = Object.assign({}, groupCall)
-      return Object.assign({}, state, tempState)
-    }
+    // case 'Netcall_Set_GroupCall': {
+    //   let tempState = Object.assign({}, state)
+    //   let groupCall = action.payload // {apnsText,content:{id,members,teamId,room,type},from,to}
+    //   tempState.netcallGroupCallInfo = Object.assign({}, groupCall)
+    //   return Object.assign({}, state, tempState)
+    // }
     default:
       return state
   }

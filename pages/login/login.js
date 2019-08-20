@@ -1,6 +1,5 @@
 import IMController from '../../controller/im.js'
 import { connect } from '../../redux/index.js'
-console.log(connect)
 let app = getApp()
 let store = app.store
 let pageConfig = {//页面的定义

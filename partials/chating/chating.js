@@ -139,7 +139,7 @@ let pageConfig = {
   /**
    * emoji组件回调
    */
-  emojiCLick(e) {
+  emojiCLick(e) { 
     let val = e.detail
     // 单击删除按钮，，删除emoji
     if (val == '[删除]') {
@@ -796,38 +796,38 @@ let pageConfig = {
   /**
    * 选择拍摄视频或者照片
    */
-  chooseImageOrVideo() {
-    let self = this
-    self.setData({
-      moreFlag: false
-    })
-    wx.showActionSheet({
-      itemList: ['照相', '视频'],
-      success: function (res) {
-        if (res.tapIndex === 0) { // 相片
-          wx.chooseImage({
-            sourceType: ['camera'],
-            success: function (res) {
-              self.sendImageToNOS(res)
-            },
-          })
-        } else if (res.tapIndex === 1) { // 视频
-          wx.chooseVideo({
-            sourceType: ['camera', 'album'],
-            success: function (res) {
-              if (res.duration > 60) {
-                showToast('text', '视频时长超过60s，请重新选择')
-                return
-              }
-              console.log(res);
-              // {duration,errMsg,height,size,tempFilePath,width}
-              self.sendVideoToNos(res)
-            }
-          })
-        }
-      }
-    })
-  },
+  // chooseImageOrVideo() {
+  //   let self = this
+  //   self.setData({
+  //     moreFlag: false
+  //   })
+  //   wx.showActionSheet({
+  //     itemList: ['照相', '视频'],
+  //     success: function (res) {
+  //       if (res.tapIndex === 0) { // 相片
+  //         wx.chooseImage({
+  //           sourceType: ['camera'],
+  //           success: function (res) {
+  //             self.sendImageToNOS(res)
+  //           },
+  //         })
+  //       } else if (res.tapIndex === 1) { // 视频
+  //         wx.chooseVideo({
+  //           sourceType: ['camera', 'album'],
+  //           success: function (res) {
+  //             if (res.duration > 60) {
+  //               showToast('text', '视频时长超过60s，请重新选择')
+  //               return
+  //             }
+  //             console.log(res);
+  //             // {duration,errMsg,height,size,tempFilePath,width}
+  //             self.sendVideoToNos(res)
+  //           }
+  //         })
+  //       }
+  //     }
+  //   })
+  // },
   /**
    * 选取位置
    */

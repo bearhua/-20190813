@@ -107,7 +107,7 @@ export default function createStore(reducer, preloadedState, enhancer) {
       const listener = listeners[i]
       listener()
     }
-
+    console.log(action)
     return action
   }
 

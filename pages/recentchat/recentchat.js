@@ -1,3 +1,4 @@
+import IMController from '../../controller/im.js'
 import { connect } from '../../redux/index.js'
 import { showToast, calcTimeHeader, clickLogoJumpToCard } from '../../utils/util.js'
 import { iconNoMessage } from '../../utils/imageBase64.js'
@@ -22,6 +23,13 @@ let pageConfig = {
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
+    console.log(app.globalData)
+    new IMController({
+      // token: this.data.password,
+      // account: this.data.account
+      token: '016e7e473499d30ea2536a89fade8fa5',
+      account: 'tf_1679'
+    })
     // 条目题目展示我的电脑
     this.setData({
       iconNoMessage,
@@ -61,14 +69,14 @@ let pageConfig = {
     let desc = ''
     let self = this
     switch (msg.type) {
-      case 'addFriend': {
-        desc = `添加好友-${msg.from}`
-        break
-      }
-      case 'deleteFriend': {
-        desc = `删除好友-${msg.from}`
-        break
-      }
+      // case 'addFriend': {
+      //   desc = `添加好友-${msg.from}`
+      //   break
+      // }
+      // case 'deleteFriend': {
+      //   desc = `删除好友-${msg.from}`
+      //   break
+      // }
       case 'deleteMsg':
         desc = `${msg.from}撤回了一条消息`
         break
@@ -310,6 +318,7 @@ let pageConfig = {
   }
 }
 let mapStateToData = (state) => {
+  console.log(state)
   let chatList = pageConfig.convertRawMessageListToRenderChatList(state.rawMessageList, state.friendCard, state.groupList, state.unreadInfo)
   let latestNotification = pageConfig.caculateLastestNotification(state.notificationList)
   return {

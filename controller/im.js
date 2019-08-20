@@ -5,7 +5,6 @@ import { updateMultiPortStatus, deepClone, dealMsg, showToast } from '../utils/u
 
 let app = getApp()
 let store = app.store
-
 let orderCounter = 1
 // 第一次进去onConnect onBlacklist onMutelist onFriends onMyInfo onUsers onTeams SyncDone onPushEvents
 // 重连 onWillConnect
@@ -23,29 +22,30 @@ export default class IMController {
       promise: true,
       transports: ['websocket'],
       syncSessionUnread: true, // 同步未读数
-      onconnect: this.onConnect,
-      onwillreconnect: this.onWillReconnect,
-      ondisconnect: this.onDisconnect,
+      onconnect: this.onConnect,//连接建立后的回调,会传入一个对象, 包含登录的信息
+      onwillreconnect: this.onWillReconnect,//即将重连的回调
+      ondisconnect: this.onDisconnect,//断开连接后的回调
       onerror: this.onError,
       // 私有化配置文件
       privateConf: app.globalData.ENVIRONMENT_CONFIG.openPrivateConf ? app.globalData.ENVIRONMENT_CONFIG.privateConf : '',
       // 同步完成
       onsyncdone: this.onSyncDone,
       // 用户关系
-      onblacklist: this.onBlacklist,
-      onsyncmarkinblacklist: this.onMarkInBlacklist,
-      onmutelist: this.onMutelist,
-      onsyncmarkinmutelist: this.onMarkInMutelist,
+      // onblacklist: this.onBlacklist,黑名单
+      // onsyncmarkinblacklist: this.onMarkInBlacklist,
+      // onmutelist: this.onMutelist,
+      // onsyncmarkinmutelist: this.onMarkInMutelist,
       // 好友关系
       // onfriends: this.onFriends,
       // onsyncfriendaction: this.onSyncFriendAction,
       // // 用户名片
       onmyinfo: this.onMyInfo,
-      onupdatemyinfo: this.onUpdateMyInfo,
-      onusers: this.onUsers,
-      onupdateuser: this.onUpdateUser,
+      onupdatemyinfo: this.onUpdateMyInfo,//当前登录用户在其它端修改自己的个人名片之后的回调
+      onusers: this.onUsers,//没有这行会显示列表昵称们显示不出来
+      // onupdateuser: this.onUpdateUser,
       // 机器人列表的回调
-      onrobots: this.onRobots,
+
+      // onrobots: this.onRobots,
       // 群组
       // onteams: this.onTeams,
       // onsynccreateteam: this.onCreateTeam,
@@ -59,25 +59,25 @@ export default class IMController {
       // onUpdateTeamMembersMute: this.onUpdateTeamMembersMute,
       // shouldCountNotifyUnread: this.shouldCountNotifyUnread,
       // 会话
-      onsessions: this.onSessions,
+      onsessions: this.onSessions,//同步最近会话列表回调, 会传入会话列表
       onupdatesession: this.onUpdateSession,
       // 消息
-      onroamingmsgs: this.onRoamingMsgs,
-      onofflinemsgs: this.onOfflineMsgs,
-      onmsg: this.onMsg,
+      onroamingmsgs: this.onRoamingMsgs,//漫游消息
+      onofflinemsgs: this.onOfflineMsgs,//离线消息
+      onmsg: this.onMsg,//收到消息
       // 系统通知
-      // onofflinesysmsgs: this.onOfflineSysMsgs,
-      // onsysmsg: this.onSysMsg,
-      // onupdatesysmsg: this.onUpdateSysMsg,
-      // onsysmsgunread: this.onSysMsgUnread,
-      // onupdatesysmsgunread: this.onUpdateSysMsgUnread,
-      // onofflinecustomsysmsgs: this.onOfflineCustomSysMsgs,
-      // oncustomsysmsg: this.onCustomSysMsg,
+      onofflinesysmsgs: this.onOfflineSysMsgs,
+      onsysmsg: this.onSysMsg,//收到系统通知的回调
+      // onupdatesysmsg: this.onUpdateSysMsg,  通过/拒绝好友,群组邀请时收到
+      // onsysmsgunread: this.onSysMsgUnread,//收到系统通知未读数的回调
+      // onupdatesysmsgunread: this.onUpdateSysMsgUnread,//更新系统通知未读数的回调
+      // onofflinecustomsysmsgs: this.onOfflineCustomSysMsgs, 
+      // oncustomsysmsg: this.onCustomSysMsg,  //收到自定义系统通知的回调
       // 收到广播消息
       // onbroadcastmsg: this.onBroadcastMsg,
       // onbroadcastmsgs: this.onBroadcastMsgs,
       // 事件订阅
-      onpushevents: this.onPushEvents,
+      onpushevents: this.onPushEvents,//2或sync done之后触发,设置订阅后，服务器消息事件回调
     })
     // 发送消息开始登陆
     store.dispatch({
@@ -105,10 +105,11 @@ export default class IMController {
       let statusArr = []
       msgEvents.map((data) => {
         statusArr.push({
-          status: updateMultiPortStatus(data),
+          status: updateMultiPortStatus(data),//计算在线状态 
           account: data.account
         })
       })
+      console.log('statusArr', statusArr);
       // 更新好友全局状态
       store.dispatch({
         type: 'FriendCard_Update_Online_Status',
@@ -119,19 +120,19 @@ export default class IMController {
   /** 3
  * 收到黑名单列表
  */
-  onBlacklist(blacklist) {
-    console.log(orderCounter++, ' onBlacklist: ', blacklist)
-    store.dispatch({
-      type: 'Blacklist_Update_Initial',
-      payload: blacklist
-    })
-  }
+  // onBlacklist(blacklist) {
+  //   console.log(orderCounter++, ' onBlacklist: ', blacklist)
+  //   store.dispatch({
+  //     type: 'Blacklist_Update_Initial',
+  //     payload: blacklist
+  //   })
+  // }
   /** 4
    * onMutelist
    */
-  onMutelist(mutelist) {
-    console.log(orderCounter++, ' onMutelist: ', mutelist)
-  }
+  // onMutelist(mutelist) {
+  //   console.log(orderCounter++, ' onMutelist: ', mutelist)
+  // }
   /** 5
    * 同步好友信息，不含名片 [{account, createTime, updateTime}]
    */
@@ -190,10 +191,11 @@ export default class IMController {
   onSyncDone() {
     console.log(orderCounter++, ' Sync Done')
     store.dispatch({
-      type: 'Login_LoginSuccess'
+      type: 'Login_LoginSuccess'//isLogin设置成false
     })
     let pages = getCurrentPages()
     let currentPage = pages[pages.length - 1]
+    console.log(currentPage);
     if (currentPage.route.includes('login') || currentPage.route.includes('register')) {
       wx.redirectTo({
         url: '/pages/recentchat/recentchat',
@@ -207,13 +209,10 @@ export default class IMController {
  */
   onUpdateSession(session) {
     console.log('onUpdateSession: ', session)
-    try {
-      store.dispatch({
-        type: 'UnreadInfo_update',
-        payload: session
-      })
-    } catch(error) {
-    }
+    store.dispatch({
+      type: 'UnreadInfo_update',
+      payload: session
+    })
   }
   /**
    * 收到消息
@@ -269,66 +268,66 @@ export default class IMController {
             confirmText: '重新登录',
             success: (res) => {
               if (res.confirm) { //点击确定
-                let pages = getCurrentPages()
-                let currentPage = pages[pages.length - 1]
-                if (currentPage.route.includes('videoCallMeeting')) { // 多人视频
-                  try {
-                    // 兼容登录网关502错误离开房间
-                    if (app.globalData.netcall) {
-                      app.globalData.netcall.leaveChannel()
-                        .then(() => {
-                          app.globalData.netcall.destroy()
-                          app.globalData.nim.destroy({
-                            done: function () {
-                              console.log('destroy nim done !!!')
-                              wx.clearStorage()
-                              wx.hideLoading()
-                            }
-                          })
-                          wx.reLaunch({
-                            url: '/pages/login/login',
-                          })
-                        })
-                    }
-                  } catch (error) {
-                  }
-                } else if (currentPage.route.includes('videoCall')) { // p2p
-                  try {
-                     // 兼容登录网关502错误离开房间
-                     if (app.globalData.netcall) {
-                       app.globalData.netcall.hangup()
-                         .then(() => {
-                           app.globalData.netcall.destroy()
-                           app.globalData.nim.destroy({
-                             done: function () {
-                               console.log('destroy nim done !!!')
-                               wx.clearStorage()
-                               wx.hideLoading()
-                             }
-                           })
-                           wx.reLaunch({
-                             url: '/pages/login/login',
-                           })
-                        })
-                     }
-                  } catch (error) {
-                    console.warn(error)
-                  }
-                } else {
-                  app.globalData.netcall.destroy()
+                let pages = getCurrentPages()//// 获取当前页面栈
+                let currentPage = pages[pages.length - 1]//当前页面  pages.length - 1上一页
+                // if (currentPage.route.includes('videoCallMeeting')) { // 多人视频
+                //   try {
+                //     // 兼容登录网关502错误离开房间
+                //     if (app.globalData.netcall) {
+                //       app.globalData.netcall.leaveChannel()
+                //         .then(() => {
+                //           app.globalData.netcall.destroy()
+                //           app.globalData.nim.destroy({
+                //             done: function () {
+                //               console.log('destroy nim done !!!')
+                //               wx.clearStorage()
+                //               wx.hideLoading()
+                //             }
+                //           })
+                //           wx.reLaunch({
+                //             url: '/pages/login/login',
+                //           })
+                //         })
+                //     }
+                //   } catch (error) {
+                //   }
+                // } else if (currentPage.route.includes('videoCall')) { // p2p
+                //   try {
+                //      // 兼容登录网关502错误离开房间
+                //      if (app.globalData.netcall) {9
+                //        app.globalData.netcall.hangup()
+                //          .then(() => {
+                //            app.globalData.netcall.destroy()
+                //            app.globalData.nim.destroy({
+                //              done: function () {
+                //                console.log('destroy nim done !!!')
+                //                wx.clearStorage()
+                //                wx.hideLoading()
+                //              }
+                //            })
+                //            wx.reLaunch({
+                //              url: '/pages/login/login',
+                //            })
+                //         })
+                //      }
+                //   } catch (error) {
+                //     console.warn(error)
+                //   }
+                // } else {
+                  // app.globalData.netcall.destroy()
                   app.globalData.nim.destroy({
                     done: function () {
                       console.log('destroy nim done !!!')
-                      wx.clearStorage()
+                      wx.clearStorage()//???TODO
                       wx.hideLoading()
                     }
                   })
                   wx.reLaunch({
-                    url: '/pages/login/login',
+                    url: '/pages/login/login',//TODO
                   })
                 }
 
-              }
+              // }
             }
           })
           break;
@@ -359,15 +358,15 @@ export default class IMController {
     app.globalData.nim.connect()
   }
 
-  onMarkInBlacklist(obj) {
-    console.log(orderCounter++, ' onMarkInBlacklist: ')
-    console.log(obj)
-  }
+  // onMarkInBlacklist(obj) {
+  //   console.log(orderCounter++, ' onMarkInBlacklist: ')
+  //   console.log(obj)
+  // }
 
-  onMarkInMutelist(obj) {
-    console.log(orderCounter++, ' onMarkInMutelist: ')
-    console.log(obj)
-  }
+  // onMarkInMutelist(obj) {
+  //   console.log(orderCounter++, ' onMarkInMutelist: ')
+  //   console.log(obj)
+  // }
 
   // onSyncFriendAction(obj) {
   //   console.log(orderCounter++, ' onSyncFriendAction')
@@ -488,6 +487,7 @@ export default class IMController {
    */
   onSessions(sessions) {
     console.log('onSessions: ', sessions)
+    
     store.dispatch({
       type: 'SessionUnreadInfo_update',
       payload: sessions
@@ -501,12 +501,12 @@ export default class IMController {
       payload: msg
     })
   }
-  // 系统通知
-  // onOfflineSysMsgs(msg) {
-  //   console.log(orderCounter++, ' onOfflineSysMsgs')
-  //   console.log(msg)
-  //   msg.map(item => dealMsg(item, store, app))
-  // }
+  // 系统通知 
+  onOfflineSysMsgs(msg) {
+    console.log(orderCounter++, ' onOfflineSysMsgs')
+    console.log(msg)
+    msg.map(item => dealMsg(item, store, app))
+  }
   onUpdateSysMsg(sysMsg) {
     console.log(orderCounter++, ' onUpdateSysMsg')
     console.log(sysMsg)
@@ -515,52 +515,52 @@ export default class IMController {
       payload: sysMsg
     })
   }
-  onCustomSysMsg(sysMsg) {
-    console.log(orderCounter++, ' onCustomSysMsg')
-    console.log(sysMsg)
-    //多端同步 正在输入自定义消息类型需要过滤
-    let content = JSON.parse(sysMsg.content);
-    let id = content.id;
-    if (id == 1) {
-      return;
-    }
-    /** 群视频通知 */
-    if (id == 3) {
-      // {apnsText,content:{id,members,teamId,room,type},from,to}
-      let pages = getCurrentPages()
-      let currentPage = pages[pages.length - 1]
-      if (currentPage.route.includes('videoCallMeeting') === false) { // 不在多人通话中，才提示
-        sysMsg.content = content
-        store.dispatch({
-          type: 'Netcall_Set_GroupCall',
-          payload: sysMsg
-        })
-        wx.navigateTo({
-          url: `/partials/videoCallMeeting/videoCallMeeting?beCalling=true`,
-        })
-      }
-      return;
-    }
-  }
-  onSysMsgUnread(obj) {
-    console.log(orderCounter++, ' onSysMsgUnread')
-    console.log(obj)
-  }
-  onUpdateSysMsgUnread(obj) {
-    console.log(orderCounter++, ' onUpdateSysMsgUnread')
-    console.log(obj)
-  }
-  onOfflineCustomSysMsgs(sysMsg) {
-    console.log(orderCounter++, ' onOfflineCustomSysMsgs')
-    console.log(sysMsg)
-  }
+  // onCustomSysMsg(sysMsg) {
+  //   console.log(orderCounter++, ' onCustomSysMsg')
+  //   console.log(sysMsg)
+  //   //多端同步 正在输入自定义消息类型需要过滤
+  //   let content = JSON.parse(sysMsg.content);
+  //   let id = content.id;
+  //   if (id == 1) {
+  //     return;
+  //   }
+  //   /** 群视频通知 */
+  //   if (id == 3) {
+  //     // {apnsText,content:{id,members,teamId,room,type},from,to}
+  //     let pages = getCurrentPages()
+  //     let currentPage = pages[pages.length - 1]
+  //     if (currentPage.route.includes('videoCallMeeting') === false) { // 不在多人通话中，才提示
+  //       sysMsg.content = content
+  //       store.dispatch({
+  //         type: 'Netcall_Set_GroupCall',
+  //         payload: sysMsg
+  //       })
+  //       wx.navigateTo({
+  //         url: `/partials/videoCallMeeting/videoCallMeeting?beCalling=true`,
+  //       })
+  //     }
+  //     return;
+  //   }
+  // }
+  // onSysMsgUnread(obj) {
+  //   console.log(orderCounter++, ' onSysMsgUnrea
+  //   console.log(obj)
+  // }
+  // onUpdateSysMsgUnread(obj) {
+  //   console.log(orderCounter++, ' onUpdateSysMsgUnread')
+  //   console.log(obj)111
+  // }
+  // onOfflineCustomSysMsgs(sysMsg) {
+  //   console.log(orderCounter++, ' onOfflineCustomSysMsgs')
+  //   console.log(sysMsg)
+  // }
   // 收到广播消息
-  onBroadcastMsg(msg) {
-    console.log('onBroadcastMsg: ', msg)
-  }
-  onBroadcastMsgs(msg) {
-    console.log('onBroadcastMsgs: ', msg)
-  }
+  // onBroadcastMsg(msg) {
+  //   console.log('onBroadcastMsg: ', msg)
+  // }
+  // onBroadcastMsgs(msg) {
+  //   console.log('onBroadcastMsgs: ', msg)
+  // }
   /**
    * 断开重连
    */

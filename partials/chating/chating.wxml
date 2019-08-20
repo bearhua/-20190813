@@ -82,7 +82,7 @@
         {{isLongPress ? '松开结束' : '按住说话'}}
       </button>
       <image src='../../images/more.png' catchtap='toggleMore' class='chatinput-img fr'></image>
-      <image src='../../images/emoji.png' catchtap='toggleEmoji' class='chatinput-img fr emoji'></image>
+      <!-- <image src='../../images/emoji.png' catchtap='toggleEmoji' class='chatinput-img fr emoji'></image> -->
     </view>
     <view wx:if="{{emojiFlag}}" class='chatinput-subcontent'>
       <component-emoji bind:EmojiClick="emojiCLick" bind:EmojiSend="emojiSend"></component-emoji>
@@ -93,10 +93,10 @@
           <image src="../../images/photo.png" class='image'></image>
           <text class='text'>相册</text>
         </view>
-        <view class='more-subcontent-item' catchtap='chooseImageOrVideo'>
+        <!-- <view class='more-subcontent-item' catchtap='chooseImageOrVideo'>
           <image src="../../images/shoot.png" class='image'></image>
           <text class='text'>拍摄</text>
-        </view>
+        </view> -->
         <!-- <view class='more-subcontent-item'><view class='image'></view><text class='text'>文件</text></view> -->
         <view class='more-subcontent-item' catchtap='showTipMessagePanel'>
           <image src="../../images/tip.png" class='image'></image>
@@ -108,10 +108,10 @@
         </view> -->
       </view>
       <view style='display:flex;justify-content: space-between;'>
-        <view class='more-subcontent-item' catchtap='choosePosition'>
+        <!-- <view class='more-subcontent-item' catchtap='choosePosition'>
           <image src="../../images/location.png" class='image'></image>
           <text class='text'>位置</text>
-        </view>
+        </view> -->
         <!-- <view class='more-subcontent-item' catchtap='videoCall'>
           <image src="../../images/location.png" class='image'></image>
           <text class='text'>视频通话</text>

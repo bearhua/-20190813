@@ -33,7 +33,6 @@ function connect(mapStateToProps, mapDispatchToProps) {
       this.setData(mappedState)
     }
     function onLoad(options) {
-      console.log(onLoad)
       this.store = app.store;
       if (!this.store) {
         warning("Store对象不存在!")

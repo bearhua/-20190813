@@ -19,7 +19,6 @@ App(
         PAGE_CONFIG
       },
       onShow: function(e) {
-        console.log(1)
         if (e.scene == 1007 || e.scene == 1008) {
           try{
             this.globalData.netcall && this.globalData.netcall.destroy()
@@ -30,6 +29,7 @@ App(
           }catch(e) {
           }
         }
+        // this.setTotalUnread('100')
       },
       onLaunch: function (e) {
         let userInfo = wx.getStorageSync('userInfo')
@@ -41,6 +41,22 @@ App(
         //   width: systemInfo.windowWidth,
         //   height: systemInfo.windowHeig、32、
         // }
+      },
+      //设置消息未读总数
+      setTotalUnread : function(num){
+        // var num = '100';
+        console.log(num)
+        if (num && parseInt(num) > 99) num = '99+'
+        if (num && parseInt(num) > 0){
+          wx.setTabBarBadge({
+            index: 0,
+            text: '' + num,
+          })
+        }else{
+          wx.removeTabBarBadge({
+            index: 0
+          })
+        }
       }
     }
   )
