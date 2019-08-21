@@ -138,8 +138,11 @@ let pageConfig = {
    */
   catchDeleteTap(e) {
     let session = e.currentTarget.dataset.session
+    let account = session.split('-')
     let chatAccount = Object.assign({}, this.data.chatAccount)
+    console.log(account)
     delete chatAccount[session]
+    console.log(session);
     let chatList = [...this.data.chatList]
     let deleteIndex = 0
     chatList.map((item, index) => {
@@ -157,6 +160,16 @@ let pageConfig = {
       chatList,
       chatAccount
     })
+    //删除,重新渲染总条数
+    app.globalData.nim.resetSessionUnread(session)
+    app.globalData.nim.deleteSession({
+      scene: 'p2p',
+      to: account[1],
+      done: this.deleteSessionDone
+    });
+  },
+  deleteSessionDone: function (error, obj){
+    console.log('删除会话' + (!error ? '成功' : '失败'), error, obj);
   },
   /**
      * 单击消息通知
