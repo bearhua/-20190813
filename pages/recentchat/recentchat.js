@@ -5,7 +5,7 @@ import { iconNoMessage } from '../../utils/imageBase64.js'
 let app = getApp()
 let store = app.store
 
-let startX = 0
+// let startX = 0
 
 let pageConfig = {
   /**
@@ -14,7 +14,7 @@ let pageConfig = {
   data: {
     iconNoMessage: '',
     loginUserAccount: '',
-    translateX: 0,
+    // translateX: 0,
     defaultUserLogo: '',
     chatList: [], // [{account,nick,lastestMsg,type,timestamp,displayTime,message,unread,status}]
     chatAccount: {} // {accountName: accountName} 备注:消息通知key为notification
@@ -48,99 +48,99 @@ let pageConfig = {
     // this.sortChatList()
   },
   /**
-   * 排序chatlist
+   * 排序chatlist 按最新时间
    */
-  sortChatList() {
-    if (this.data.chatList.length !== 0) {
-      let chatList = [...this.data.chatList]
-      chatList.sort((a, b) => {
-        return parseInt(b.timestamp) - parseInt(a.timestamp)
-      })
-      this.setData({
-        chatList
-      })
-    }
-  },
+  // sortChatList() {
+  //   if (this.data.chatList.length !== 0) {
+  //     let chatList = [...this.data.chatList]
+  //     chatList.sort((a, b) => {
+  //       return parseInt(b.timestamp) - parseInt(a.timestamp)
+  //     })
+  //     this.setData({
+  //       chatList
+  //     })
+  //   }
+  // },
   /**
    * 传递消息进来，添加至最近会话列表
    * 必须字段 {type, time, from,to}
    */
-  addNotificationToChatList(msg) {
-    let desc = ''
-    let self = this
-    switch (msg.type) {
-      // case 'addFriend': {
-      //   desc = `添加好友-${msg.from}`
-      //   break
-      // }
-      // case 'deleteFriend': {
-      //   desc = `删除好友-${msg.from}`
-      //   break
-      // }
-      case 'deleteMsg':
-        desc = `${msg.from}撤回了一条消息`
-        break
-      case 'custom':
-        let data = JSON.parse(msg.content)
-        let seen = []
-        let str = data['content'] || JSON.stringify(data, function (key, val) {
-          if (typeof val == "object") {
-            if (seen.indexOf(val) >= 0)
-              return
-            seen.push(val)
-          }
-          return val
-        }) // 可能没有content属性
-        desc = `自定义系统通知-${str}`
-        break
-      default:
-        desc = msg.type
-        break
-    }
-    if (!self.data.chatAccount['notification']) { // 没有系统通知
-      self.setData({
-        chatList: [{
-          account: '消息通知',
-          timestamp: msg.time,
-          displayTime: msg.time ? calcTimeHeader(msg.time) : '',
-          lastestMsg: desc,
-        }, ...self.data.chatList],
-        chatAccount: Object.assign({}, self.data.chatAccount, { notification: 'notification' })
-      })
-    } else {
-      let temp = [...self.data.chatList]
-      temp.map((message, index) => {
-        if (message.account === '消息通知') {
-          temp[index].lastestMsg = desc
-          temp[index].timestamp = msg.time
-          temp[index].displayTime = msg.time ? calcTimeHeader(msg.time) : ''
-          return
-        }
-      })
-      temp.sort((a, b) => {
-        return a.timestamp < b.timestamp
-      })
-      self.setData({
-        chatList: temp
-      })
-    }
-  },
+  // addNotificationToChatList(msg) {
+  //   let desc = ''
+  //   let self = this
+  //   switch (msg.type) {
+  //     // case 'addFriend': {
+  //     //   desc = `添加好友-${msg.from}`
+  //     //   break
+  //     // }
+  //     // case 'deleteFriend': {
+  //     //   desc = `删除好友-${msg.from}`
+  //     //   break
+  //     // }
+  //     case 'deleteMsg':
+  //       desc = `${msg.from}撤回了一条消息`
+  //       break
+  //     case 'custom':
+  //       let data = JSON.parse(msg.content)
+  //       let seen = []
+  //       let str = data['content'] || JSON.stringify(data, function (key, val) {
+  //         if (typeof val == "object") {
+  //           if (seen.indexOf(val) >= 0)
+  //             return
+  //           seen.push(val)
+  //         }
+  //         return val
+  //       }) // 可能没有content属性
+  //       desc = `自定义系统通知-${str}`
+  //       break
+  //     default:
+  //       desc = msg.type
+  //       break
+  //   }
+  //   if (!self.data.chatAccount['notification']) { // 没有系统通知
+  //     self.setData({
+  //       chatList: [{
+  //         account: '消息通知',
+  //         timestamp: msg.time,
+  //         displayTime: msg.time ? calcTimeHeader(msg.time) : '',
+  //         lastestMsg: desc,
+  //       }, ...self.data.chatList],
+  //       chatAccount: Object.assign({}, self.data.chatAccount, { notification: 'notification' })
+  //     })
+  //   } else {
+  //     let temp = [...self.data.chatList]
+  //     temp.map((message, index) => {
+  //       if (message.account === '消息通知') {
+  //         temp[index].lastestMsg = desc
+  //         temp[index].timestamp = msg.time8
+  //         temp[index].displayTime = msg.time ? calcTimeHeader(msg.time) : ''
+  //         return
+  //       }
+  //     })
+  //     temp.sort((a, b) => {
+  //       return a.timestamp < b.timestamp
+  //     })
+  //     self.setData({
+  //       chatList: temp
+  //     })
+  //   }
+  // },
   /**
    * 捕获从滑动删除传递来的事件
    */
-  catchDeleteNotification(e) {
-    store.dispatch({
-      type: 'Notification_Clear_All',
-    })
-  },
+  // catchDeleteNotification(e) {
+  //   store.dispatch({
+  //     type: 'Notification_Clear_All',
+  //   })
+  // },
   /**
    * 捕获从滑动删除传递来的事件
    */
   catchDeleteTap(e) {
+    console.log('catchDeleteTap----我要删除数据了',e)
     let session = e.currentTarget.dataset.session
     let account = session.split('-')
     let chatAccount = Object.assign({}, this.data.chatAccount)
-    console.log(account)
     delete chatAccount[session]
     console.log(session);
     let chatList = [...this.data.chatList]
@@ -174,15 +174,16 @@ let pageConfig = {
   /**
      * 单击消息通知
      */
-  switchToMessageNotification() {
-    wx.navigateTo({
-      url: '../../partials/messageNotification/messageNotification',
-    })
-  },
+  // switchToMessageNotification() {
+  //   wx.navigateTo({
+  //     url: '../../partials/messageNotification/messageNotification',
+  //   })
+  // },
   /**
    * 单击进入聊天页面
    */
   switchToChating(e) {
+    console.log('单击进入聊天页面')
     let account = e.currentTarget.dataset.account
     let session = e.currentTarget.dataset.session
     // 更新会话对象
@@ -192,16 +193,16 @@ let pageConfig = {
     })
     let typeAndAccount = session.split('-')
     var chatType
-    if (typeAndAccount[0] === 'team') {
-      let card = this.data.groupList[typeAndAccount[1]] || {}
-      chatType = card.type || 'team'
-      store.dispatch({
-        type: 'Set_Current_Group',
-        payload: account
-      })
-    } else {
+    // if (typeAndAccount[0] === 'team') {
+    //   let card = this.data.groupList[typeAndAccount[1]] || {}
+    //   chatType = card.type || 'team'
+    //   store.dispatch({
+    //     type: 'Set_Current_Group',
+    //     payload: account
+    //   })
+    // } else {
       chatType = 'p2p'
-    }
+    // }
     // 告知服务器，标记会话已读
     app.globalData.nim.resetSessionUnread(session)
     // 跳转
@@ -213,15 +214,17 @@ let pageConfig = {
    * 单击进入个人区域
    */
   switchToPersonCard(e) {
-    let account = e.currentTarget.dataset.account
-    if (account === 'ai-assistant') {
-      return
-    }
-    // 重置该人的未读数
-    // 重置某个会话的未读数,如果是已经存在的会话记录, 会将此会话未读数置为 0, 并会收到onupdatesession回调,而且此会话在收到消息之后依然会更新未读数
-    app.globalData.nim.resetSessionUnread(`p2p-${account}`)
-    // 压栈进入account介绍页
-    clickLogoJumpToCard(this.data.friendCard, account, true)
+    console.log('单击进入个人区域')
+    return;
+    // let account = e.currentTarget.dataset.account
+    // if (account === 'ai-assistant') {
+    //   return
+    // }
+    // // 重置该人的未读数
+    // // 重置某个会话的未读数,如果是已经存在的会话记录, 会将此会话未读数置为 0, 并会收到onupdatesession回调,而且此会话在收到消息之后依然会更新未读数
+    // app.globalData.nim.resetSessionUnread(`p2p-${account}`)
+    // // 压栈进入account介绍页
+    // clickLogoJumpToCard(this.data.friendCard, account, true)
   },
   /**
    * 判断消息类型，返回提示
@@ -260,6 +263,7 @@ let pageConfig = {
    * 将原生消息转化为最近会话列表渲染数据
    */
   convertRawMessageListToRenderChatList(rawMessageList, friendCard, groupList, unreadInfo) {
+    console.log('rawMessageList', rawMessageList );
     let chatList = []
     let sessions = Object.keys(rawMessageList)
     let index = 0
@@ -273,18 +277,19 @@ let pageConfig = {
         return
       }
       let maxTime = Math.max(...unixtimeList)
+      // console.log('sessionCard,friendCard[account]', friendCard[account], groupList[account])
       if (maxTime) {
         let msg = rawMessageList[session][maxTime + ''] || {}
         let msgType = this.judgeMessageType(msg)
         let lastestMsg = msgType
         let status =  isP2p ?  (sessionCard.status || '离线') : ''
         let nick = isP2p ? (sessionCard.nick || '非好友') : sessionCard.name
-        let avatar =  isP2p ? (sessionCard.avatar || app.globalData.PAGE_CONFIG.defaultUserLogo) : (sessionCard.avatar || app.globalData.PAGE_CONFIG.defaultUserLogo)
+        let avatar = sessionCard.avatar || app.globalData.PAGE_CONFIG.defaultUserLogo
         chatList.push({
           chatType,
           session,
           account,
-          status,
+          status,  
           nick,
           avatar,
           lastestMsg: lastestMsg || msg.text,
@@ -304,36 +309,36 @@ let pageConfig = {
   /**
    * 计算最近一条发送的通知消息列表
    */
-  caculateLastestNotification(notificationList) {
-    let temp = Object.assign({}, notificationList)
-    let lastestDesc = ''
-    let systemMaxIndex = null
-    let customMaxIndex = null
-    // 从大到小
-    let system = notificationList.system.sort((a, b) => {
-      return b.msg.time - a.msg.time
-    })
-    let custom = notificationList.custom.sort((a, b) => {
-      return b.msg.time - a.msg.time
-    })
-    if (system[0]) {
-      if (custom[0]) {
-        lastestDesc = system[0].msg.time - custom[0].msg.time ? system[0].desc : custom[0].desc
-      } else {
-        lastestDesc = system[0].desc
-      }
-    } else {
-      if (custom[0]) {
-        lastestDesc = custom[0].desc
-      }
-    }
-    return lastestDesc
-  }
+  // caculateLastestNotification(notificationList) {
+  //   let temp = Object.assign({}, notificationList)
+  //   let lastestDesc = ''
+  //   let systemMaxIndex = null
+  //   let customMaxIndex = null
+  //   // 从大到小
+  //   let system = notificationList.system.sort((a, b) => {
+  //     return b.msg.time - a.msg.time
+  //   })
+  //   let custom = notificationList.custom.sort((a, b) => {
+  //     return b.msg.time - a.msg.time
+  //   })
+  //   if (system[0]) {
+  //     if (custom[0]) {
+  //       lastestDesc = system[0].msg.time - custom[0].msg.time ? system[0].desc : custom[0].desc
+  //     } else {
+  //       lastestDesc = system[0].desc
+  //     }
+  //   } else {
+  //     if (custom[0]) {
+  //       lastestDesc = custom[0].desc
+  //     }
+  //   }
+  //   return lastestDesc
+  // }
 }
 let mapStateToData = (state) => {
   console.log(state)
   let chatList = pageConfig.convertRawMessageListToRenderChatList(state.rawMessageList, state.friendCard, state.groupList, state.unreadInfo)
-  let latestNotification = pageConfig.caculateLastestNotification(state.notificationList)
+  // let latestNotification = pageConfig.caculateLastestNotification(state.notificationList)
   return {
     rawMessageList: state.rawMessageList,
     userInfo: state.userInfo,
@@ -341,7 +346,7 @@ let mapStateToData = (state) => {
     groupList: state.groupList,
     unreadInfo: state.unreadInfo,
     chatList: chatList,
-    latestNotification
+    // latestNotification
   }
 }
 const mapDispatchToPage = (dispatch) => ({

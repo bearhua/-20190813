@@ -113,18 +113,18 @@ let indexReducer = (state = INITIAL_STATE, action) => {
       return Object.assign({}, state, tempState)
     }
     // FriendCard：更新非好友名片信息(搜索时存进来)，携带名片数据
-    // case 'FriendCard_Update_NonFriendInfoCard': {
-    //   let tempState = Object.assign({}, state)
-    //   let card = action.payload
-    //   // 触发状态更新时friendCard可能为空
-    //   if (!tempState.friendCard[card.account]) {
-    //     tempState.friendCard[card.account] = {}
-    //   }
-    //   card.isFriend = false
-    //   tempState.friendCard[card.account] = Object.assign({}, tempState.friendCard[card.account], card)
-    //   tempState.personList[card.account] = Object.assign({}, tempState.personList[card.account], card)
-    //   return Object.assign({}, state, tempState)
-    // }
+    case 'FriendCard_Update_NonFriendInfoCard': {
+      let tempState = Object.assign({}, state)
+      let card = action.payload
+      // 触发状态更新时friendCard可能为空
+      if (!tempState.friendCard[card.account]) {
+        tempState.friendCard[card.account] = {}
+      }
+      card.isFriend = false
+      tempState.friendCard[card.account] = Object.assign({}, tempState.friendCard[card.account], card)
+      tempState.personList[card.account] = Object.assign({}, tempState.personList[card.account], card)
+      return Object.assign({}, state, tempState)
+    }
     // FriendCard：更新指定好友在线状态
     case 'FriendCard_Update_Online_Status': {
       let tempState = Object.assign({}, state)
@@ -398,11 +398,11 @@ let indexReducer = (state = INITIAL_STATE, action) => {
     //   return Object.assign({}, state, tempState)
     // }
     // Notification：清除系统消息通知、自定义消息通知
-    case 'Notification_Clear_All': {
-      let tempState = Object.assign({}, state)
-      tempState.notificationList = { system: [], custom: [] }
-      return Object.assign({}, state, tempState)
-    }
+    // case 'Notification_Clear_All': {
+    //   let tempState = Object.assign({}, state)
+    //   tempState.notificationList = { system: [], custom: [] }
+    //   return Object.assign({}, state, tempState)
+    // }
     // UnreadInfo：更新未读数
     case 'UnreadInfo_update': {
       let tempState = Object.assign({}, state)
@@ -468,15 +468,15 @@ let indexReducer = (state = INITIAL_STATE, action) => {
           tempState[item]  = ''
         }
       })
-      tempState.notificationList = { system: [], custom: [] }
+      // tempState.notificationList = { system: [], custom: [] }
       return Object.assign({}, state, tempState)
     }
     // 设置当前群
-    case 'Set_Current_Group': {
-      let tempState = Object.assign({}, state)
-      tempState.currentGroup = tempState.groupList[action.payload] || {}
-      return Object.assign({}, state, tempState)
-    }
+    // case 'Set_Current_Group': {
+    //   let tempState = Object.assign({}, state)
+    //   tempState.currentGroup = tempState.groupList[action.payload] || {}
+    //   return Object.assign({}, state, tempState)
+    // }
     // 设置当前群/成员
     case 'Set_Current_Group_And_Members': {
       let tempState = Object.assign({}, state)

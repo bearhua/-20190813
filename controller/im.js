@@ -36,7 +36,7 @@ export default class IMController {
       // onmutelist: this.onMutelist,
       // onsyncmarkinmutelist: this.onMarkInMutelist,
       // 好友关系
-      // onfriends: this.onFriends,
+      // onfriends: this.onFriends,  
       // onsyncfriendaction: this.onSyncFriendAction,
       // // 用户名片
       onmyinfo: this.onMyInfo,

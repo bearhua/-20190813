@@ -377,23 +377,23 @@ function generateRichTextNode(text) {
 /**
  * 输出猜拳图片对象，用于生成富文本图片节点
  */
-function generateFingerGuessImageFile(value) {
-  let file = { w: 50, h: 50, url: '' }
-  switch (value) {
-    case 1:
-      file.url = 'http://yx-web.nos.netease.com/webdoc/h5/im/play-1.png'
-      break
-    case 2:
-      file.url = 'http://yx-web.nos.netease.com/webdoc/h5/im/play-2.png'
-      break
-    case 3:
-      file.url = 'http://yx-web.nos.netease.com/webdoc/h5/im/play-3.png'
-      break
-    default:
-      break
-  }
-  return file
-}
+// function generateFingerGuessImageFile(value) {
+//   let file = { w: 50, h: 50, url: '' }
+//   switch (value) {
+//     case 1:
+//       file.url = 'http://yx-web.nos.netease.com/webdoc/h5/im/play-1.png'
+//       break
+//     case 2:
+//       file.url = 'http://yx-web.nos.netease.com/webdoc/h5/im/play-2.png'
+//       break
+//     case 3:
+//       file.url = 'http://yx-web.nos.netease.com/webdoc/h5/im/play-3.png'
+//       break
+//     default:
+//       break
+//   }
+//   return file
+// }
 /**
    * 输出贴图表情对象，用于生成富文本图片节点
    * content:"{"type":3,"data":{"catalog":"ajmd","chartlet":"ajmd010"}}"
@@ -439,13 +439,13 @@ function clickLogoJumpToCard(friendsCard, account, isPush) {
   let friendsAccountArr = Object.keys(friendsCard)
   if (friendsAccountArr.indexOf(account) !== -1) {
     if (isPush === true) {
-    //   wx.navigateTo({
-    //     url: '/partials/personcard/personcard?account=' + account,
-    //   })
-    // } else {
-    //   wx.redirectTo({
-    //     url: '/partials/personcard/personcard?account=' + account,
-    //   })
+      wx.navigateTo({
+        url: '/partials/personcard/personcard?account=' + account,
+      })
+    } else {
+      wx.redirectTo({
+        url: '/partials/personcard/personcard?account=' + account,
+      })
     }
 
   } else {
@@ -931,7 +931,7 @@ module.exports = {
   deepClone,
   clickLogoJumpToCard,
   generateRichTextNode,
-  generateFingerGuessImageFile,
+  // generateFingerGuessImageFile,
   generateBigEmojiImageFile,
   generateImageNode,
   getFormatFriendList,

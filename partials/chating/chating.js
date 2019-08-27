@@ -1,5 +1,6 @@
 import { connect } from '../../redux/index.js'
-import { generateFingerGuessImageFile, generateBigEmojiImageFile, generateRichTextNode, generateImageNode, calcTimeHeader } from '../../utils/util.js'
+// import { generateFingerGuessImageFile, generateBigEmojiImageFile, generateRichTextNode, generateImageNode, calcTimeHeader } from '../../utils/util.js'
+import {generateBigEmojiImageFile, generateRichTextNode, generateImageNode, calcTimeHeader } from '../../utils/util.js'
 import { showToast, deepClone, clickLogoJumpToCard } from '../../utils/util.js'
 import * as iconBase64Map from '../../utils/imageBase64.js'
 
@@ -9,9 +10,9 @@ let self = this
 let pageConfig = {
   data: {
     defaultUserLogo: app.globalData.PAGE_CONFIG.defaultUserLogo,
-    videoContext: null, // 视频操纵对象
-    isVideoFullScreen: false, // 视频全屏控制标准
-    videoSrc: '', // 视频源
+    // videoContext: null, // 视频操纵对象
+    // isVideoFullScreen: false, // 视频全屏控制标准
+    // videoSrc: '', // 视频源
     recorderManager: null, // 微信录音管理对象
     recordClicked: false, // 判断手指是否触摸录音按钮
     iconBase64Map: {}, //发送栏base64图标集合
@@ -28,7 +29,77 @@ let pageConfig = {
     sendType: 0, //发送消息类型，0 文本 1 语音
     messageArr: [], //[{text, time, sendOrReceive: 'send', displayTimeHeader, nodes: []},{type: 'geo',geo: {lat,lng,title}}]
     inputValue: '',//文本框输入内容
-    from: ''
+    from: '',
+    //<div class="tfim-winchart-content tfim-winchart-content-custom">
+			// < div class= "tfim-winchart-content tfim-winchart-content-custom" > <a href="https://m.house365.com/baihongfudong1hao/" target="_blank"> <div class="tfim-winchart-content-card-l"> <img src="http://img27.house365.com/njnewhouse/2015/03/28/thumb/142753232555166a25164b2.jpg"> </div> <div class="tfim-winchart-content-card-r"> <div class="tfim-winchart-content-card-title tfim_line2">百宏府东1号</div> <div class="tfim-winchart-content-card-place tfimline1">住宅  石狮市</div> <div class="tfim-winchart-content-card-price tfimline1"><span>8500元</span>/㎡</div> </div> </a> </div>
+    // arr : [{
+    //   name:"div",
+    //   attrs: {
+    //     class:'tfim-winchart-content tfim-winchart-content-custom'
+    //   },
+    //   children:[{
+    //     name:'a',
+    //     attrs:{
+    //       href:'https://m.house365.com/baihongfudong1hao/',
+    //       target:'_blank',
+    //     },
+    //     children:[
+    //       {
+    //         name: 'div',
+    //         attrs: {
+    //           class: 'tfim-winchart-content-card-l',
+    //         },
+    //         children:[{
+    //           name:'img',
+    //           attrs:{
+    //             src:'http://img27.house365.com/njnewhouse/2015/03/28/thumb/142753232555166a25164b2.jpg',
+    //             width:'100%',
+    //             height:'100%'
+    //           }
+    //         }]
+    //       },
+    //       {
+    //         name: 'div',
+    //         attrs: {
+    //           class: 'tfim-winchart-content-card-r',
+    //         },
+    //         children: [
+    //           {
+    //             name: 'div',
+    //             attrs: {
+    //               class: 'tfim-winchart-content-card-title tfim_line2'
+    //             },
+    //             children: [{
+    //               type: 'text',
+    //               text: '【世贸外滩新城】15#标准层       C2户   型'
+    //             }]
+    //           },
+              
+    //           {
+    //             name: 'div',
+    //             attrs: {
+    //               class: 'tfim-winchart-content-card-place tfimline1'
+    //             },
+    //             children: [{
+    //               type: 'text',
+    //               text: '2室2厅1卫 87m²'
+    //             }]
+    //           },
+    //           {
+    //             name: 'div',
+    //             attrs: {
+    //               class: 'tfim-winchart-content-card-price tfimline1'
+    //             },
+    //             children: [{
+    //               type: 'text',
+    //               text: '266 万元/套起'
+    //             }]
+    //           }
+    //         ]
+    //       }]
+    //   }]
+    // }],
+    btnFlag:false//365按钮标识
   },
   onUnload() {
     // 更新当前会话对象账户
@@ -51,29 +122,30 @@ let pageConfig = {
     let loginAccountLogo = this.data.userInfo.avatar || this.data.defaultUserLogo
 
     // 设置顶部标题
-    if (chatTo === this.data.userInfo.account) {
-      wx.setNavigationBarTitle({
-        title: '我的电脑',
-      })
-    } else if (chatType === 'advanced' || chatType === 'normal') {
-      if (this.data.currentGroup.teamId === chatTo && this.data.currentGroup.isCurrentNotIn) {
-        showToast('error', '您已离开该群组')
-      }
-      let card = this.data.currentGroup || this.data.groupList[chatTo] || {}
-      let memberNum = card.memberNum || 0
-      let title = card.name || chatTo
-      wx.setNavigationBarTitle({
-        title: (title.length > 8 ? title.slice(0, 8) + '…' : title) + '（' + memberNum + '）',
-      })
-      if (!this.data.groupMemberList[chatTo] || !this.data.groupMemberList[chatTo].allMembers) { // 当前群组的成员不全时获取成员列表 并 更新当前成员是否在群聊的标志
-        this.getMemberList(chatTo)
-      }
-    } else { // p2p
+    // if (chatTo === this.data.userInfo.account) {
+    //   wx.setNavigationBarTitle({
+    //     title: '我的电脑',
+    //   })
+    // } else if (chatType === 'advanced' || chatType === 'normal') {
+    //   if (this.data.currentGroup.teamId === chatTo && this.data.currentGroup.isCurrentNotIn) {
+    //     showToast('error', '您已离开该群组')
+    //   }
+    //   let card = this.data.currentGroup || this.data.groupList[chatTo] || {}
+    //   let memberNum = card.memberNum || 0
+    //   let title = card.name || chatTo
+    //   wx.setNavigationBarTitle({
+    //     title: (title.length > 8 ? title.slice(0, 8) + '…' : title) + '（' + memberNum + '）',
+    //   })
+    //   if (!this.data.groupMemberList[chatTo] || !this.data.groupMemberList[chatTo].allMembers) { // 当前群组的成员不全时获取成员列表 并 更新当前成员是否在群聊的标志
+    //     this.getMemberList(chatTo)
+    //   }
+    // } else { // p2p
       let card = this.data.friendCard[chatTo] || {}
+      console.log(this.data.friendCard)
       wx.setNavigationBarTitle({
         title: card.nick || chatTo,
       })
-    }
+    // }
     this.setData({
       chatTo,
       chatType,
@@ -81,6 +153,7 @@ let pageConfig = {
       iconBase64Map: iconBase64Map,
       chatWrapperMaxHeight,
     })
+   
     // 重新计算所有时间
     self.reCalcAllMessageTime()
     // 滚动到底部
@@ -126,8 +199,10 @@ let pageConfig = {
    * 文本框输入事件
    */
   inputChange(e) {
+    console.log('文本框输入事件')
     this.setData({
-      inputValue: e.detail.value
+      inputValue: e.detail.value,
+      btnFlag: e.detail.value ? true : false
     })
   },
   /**
@@ -483,27 +558,27 @@ let pageConfig = {
   /**
    * 全屏播放视频
    */
-  requestFullScreenVideo(e) {
-    let video = e.currentTarget.dataset.video
-    let videoContext = wx.createVideoContext('videoEle')
+  // requestFullScreenVideo(e) {
+  //   let video = e.currentTarget.dataset.video
+  //   let videoContext = wx.createVideoContext('videoEle')
 
-    this.setData({
-      isVideoFullScreen: true,
-      videoSrc: video.url,
-      videoContext
-    })
-    videoContext.requestFullScreen()
-    videoContext.play()
-  },
+  //   this.setData({
+  //     isVideoFullScreen: true,
+  //     videoSrc: video.url,
+  //     videoContext
+  //   })
+  //   videoContext.requestFullScreen()
+  //   videoContext.play()
+  // },
   /**
    * 视频播放结束钩子
    */
-  videoEnded() {
-    this.setData({
-      isVideoFullScreen: false,
-      videoSrc: ''
-    })
-  },
+  // videoEnded() {
+  //   this.setData({
+  //     isVideoFullScreen: false,
+  //     videoSrc: ''
+  //   })
+  // },
   /**
    * 播放音频
    */
@@ -557,7 +632,8 @@ let pageConfig = {
     this.setData({
       sendType: this.data.sendType == 0 ? 1 : 0,
       focusFlag: false,
-      emojiFlag: false
+      emojiFlag: false,
+      btnFlag: false
     })
   },
   /**
@@ -796,38 +872,38 @@ let pageConfig = {
   /**
    * 选择拍摄视频或者照片
    */
-  // chooseImageOrVideo() {
-  //   let self = this
-  //   self.setData({
-  //     moreFlag: false
-  //   })
-  //   wx.showActionSheet({
-  //     itemList: ['照相', '视频'],
-  //     success: function (res) {
-  //       if (res.tapIndex === 0) { // 相片
-  //         wx.chooseImage({
-  //           sourceType: ['camera'],
-  //           success: function (res) {
-  //             self.sendImageToNOS(res)
-  //           },
-  //         })
-  //       } else if (res.tapIndex === 1) { // 视频
-  //         wx.chooseVideo({
-  //           sourceType: ['camera', 'album'],
-  //           success: function (res) {
-  //             if (res.duration > 60) {
-  //               showToast('text', '视频时长超过60s，请重新选择')
-  //               return
-  //             }
-  //             console.log(res);
-  //             // {duration,errMsg,height,size,tempFilePath,width}
-  //             self.sendVideoToNos(res)
-  //           }
-  //         })
-  //       }
-  //     }
-  //   })
-  // },
+  chooseImageOrVideo() {
+    let self = this
+    self.setData({
+      moreFlag: false
+    })
+    wx.showActionSheet({
+      itemList: ['照相', '视频'],
+      success: function (res) {
+        if (res.tapIndex === 0) { // 相片
+          wx.chooseImage({
+            sourceType: ['camera'],
+            success: function (res) {
+              self.sendImageToNOS(res)
+            },
+          })
+        } else if (res.tapIndex === 1) { // 视频
+          wx.chooseVideo({
+            sourceType: ['camera', 'album'],
+            success: function (res) {
+              if (res.duration > 60) {
+                showToast('text', '视频时长超过60s，请重新选择')
+                return
+              }
+              console.log(res);
+              // {duration,errMsg,height,size,tempFilePath,width}
+              self.sendVideoToNos(res)
+            }
+          })
+        }
+      }
+    })
+  },
   /**
    * 选取位置
    */
@@ -922,17 +998,17 @@ let pageConfig = {
    * 切换到对方介绍页
    */
   switchPersonCard(data) {
-    if (this.data.chatType === 'p2p') {
-      if (this.data.chatTo === this.data.userInfo.account || this.data.chatTo === 'ai-assistant') {
-        return
-      }
-      // 重定向进入account介绍页
-      clickLogoJumpToCard(this.data.friendCard, this.data.chatTo, false)
-    } else if (this.data.chatType === 'advanced') {
-      wx.navigateTo({
-        url: '../../partials/advancedGroupMemberCard/advancedGroupMemberCard?account=' + data.target.dataset.account + '&teamId=' + this.data.chatTo
-      })
-    }   
+    // if (this.data.chatType === 'p2p') {
+    //   if (this.data.chatTo === this.data.userInfo.account || this.data.chatTo === 'ai-assistant') {
+    //     return
+    //   }
+    //   // 重定向进入account介绍页
+    //   clickLogoJumpToCard(this.data.friendCard, this.data.chatTo, false)
+    // } else if (this.data.chatType === 'advanced') {
+    //   wx.navigateTo({
+    //     url: '../../partials/advancedGroupMemberCard/advancedGroupMemberCard?account=' + data.target.dataset.account + '&teamId=' + this.data.chatTo
+    //   })
+    // }   
   },
   /**
    * 查看云端历史消息、查看群信息、查看讨论组信息
@@ -944,13 +1020,13 @@ let pageConfig = {
     if (this.data.currentGroup.isCurrentNotIn) {
       actionArr.pop()
     }
-    if (self.data.chatType === 'advanced') {
-      actionArr.unshift('群信息')
-      actionFn.unshift(self.lookAdvancedGroupInfo)
-    } else if (self.data.chatType === 'normal') {
-      actionArr.unshift('讨论组信息')
-      actionFn.unshift(self.lookNormalGroupInfo)
-    }
+    // if (self.data.chatType === 'advanced') {
+    //   actionArr.unshift('群信息')
+    //   actionFn.unshift(self.lookAdvancedGroupInfo)
+    // } else if (self.data.chatType === 'normal') {
+    //   actionArr.unshift('讨论组信息')
+    //   actionFn.unshift(self.lookNormalGroupInfo)
+    // }
     wx.showActionSheet({
       itemList: actionArr,
       success: (res) => {
@@ -961,27 +1037,27 @@ let pageConfig = {
   /**
    * 查看群信息
    */
-  lookAdvancedGroupInfo() {
-    store.dispatch({
-      type: 'Set_Current_Group_And_Members',
-      payload: this.data.chatTo
-    })
-    wx.navigateTo({
-      url: `../advancedGroupCard/advancedGroupCard?teamId=${this.data.chatTo}&from=${this.data.from}`,
-    })
-  },
+  // lookAdvancedGroupInfo() {
+  //   store.dispatch({
+  //     type: 'Set_Current_Group_And_Members',
+  //     payload: this.data.chatTo
+  //   })
+  //   wx.navigateTo({
+  //     url: `../advancedGroupCard/advancedGroupCard?teamId=${this.data.chatTo}&from=${this.data.from}`,
+  //   })
+  // },
   /**
    * 查看讨论组信息
    */
-  lookNormalGroupInfo() {
-    store.dispatch({
-      type: 'Set_Current_Group_And_Members',
-      payload: this.data.chatTo
-    })
-    wx.navigateTo({
-      url: `../normalGroupCard/normalGroupCard?teamId=${this.data.chatTo}&from=${this.data.from}`,
-    })
-  },
+  // lookNormalGroupInfo() {
+  //   store.dispatch({
+  //     type: 'Set_Current_Group_And_Members',
+  //     payload: this.data.chatTo
+  //   })
+  //   wx.navigateTo({
+  //     url: `../normalGroupCard/normalGroupCard?teamId=${this.data.chatTo}&from=${this.data.from}`,
+  //   })
+  // },
   /**
    * 弹框 确认 清除本地记录
    */
@@ -1186,19 +1262,19 @@ let pageConfig = {
           }
           break
         }
-        case 'video': {
-          specifiedObject = {
-            video: rawMsg.file
-          }
-          break
-        }
-        case '猜拳': {
-          let value = JSON.parse(rawMsg['content']).data.value
-          specifiedObject = {
-            nodes: generateImageNode(generateFingerGuessImageFile(value))
-          }
-          break
-        }
+        // case 'video': {
+        //   specifiedObject = {
+        //     video: rawMsg.file
+        //   }
+        //   break
+        // }
+        // case '猜拳': {
+        //   let value = JSON.parse(rawMsg['content']).data.value
+        //   specifiedObject = {
+        //     nodes: generateImageNode(generateFingerGuessImageFile(value))
+        //   }
+        //   break
+        // }
         case '贴图表情': {
           let content = JSON.parse(rawMsg['content'])
           specifiedObject = {
@@ -1216,27 +1292,27 @@ let pageConfig = {
           }
           break
         }
-        case '白板消息':
-        case '阅后即焚': {
-          specifiedObject = {
-            nodes: [{
-              type: 'text',
-              text: `[${msgType}],请到手机或电脑客户端查看`
-            }]
-          }
-          break
-        }
-        case 'file':
-        case 'robot': {
-          let text = msgType === 'file' ? '文件消息' : '机器人消息'
-          specifiedObject = {
-            nodes: [{
-              type: 'text',
-              text: `[${text}],请到手机或电脑客户端查看`
-            }]
-          }
-          break
-        }
+        // case '白板消息':
+        // case '阅后即焚': {
+        //   specifiedObject = {
+        //     nodes: [{
+        //       type: 'text',
+        //       text: `[${msgType}],请到手机或电脑客户端查看`
+        //     }]
+        //   }
+        //   break
+        // }
+        // case 'file':
+        // case 'robot': {
+        //   let text = msgType === 'file' ? '文件消息' : '机器人消息'
+        //   specifiedObject = {
+        //     nodes: [{
+        //       type: 'text',
+        //       text: `[${text}],请到手机或电脑客户端查看`
+        //     }]
+        //   }
+        //   break
+        // }
         case 'custom':
           specifiedObject = {
             nodes: [{
@@ -1245,16 +1321,16 @@ let pageConfig = {
             }]
           }
           break;
-        case 'notification':
-          specifiedObject = {
-            // netbill的text为空
-            text: rawMsg.groupNotification || (rawMsg.text.length == 0 ? '通知' : rawMsg.text),
-            nodes: [{
-              type: 'text',
-              text: rawMsg.groupNotification || (rawMsg.text.length == 0 ? '通知' : rawMsg.text)
-            }]
-          }
-          break;
+        // case 'notification':
+        //   specifiedObject = {
+        //     // netbill的text为空
+        //     text: rawMsg.groupNotification || (rawMsg.text.length == 0 ? '通知' : rawMsg.text),
+        //     nodes: [{
+        //       type: 'text',
+        //       text: rawMsg.groupNotification || (rawMsg.text.length == 0 ? '通知' : rawMsg.text)
+        //     }]
+        //   }
+        //   break;
         default: {
           break
         }
@@ -1268,6 +1344,7 @@ let pageConfig = {
         displayTimeHeader
       }, specifiedObject))
     }
+    console.log(messageArr)
     return messageArr
   },
 }

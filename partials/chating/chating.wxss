@@ -5,7 +5,7 @@
   /* margin: 70rpx 0 100rpx; */
   box-sizing: border-box;
   /* overflow: hidden; */
-  background: #F3F4F6;
+  background: #f6f6f6;
 }
 /* 收起键盘热区 */
 .fold-keyboad-wrapper {
@@ -39,7 +39,7 @@
 .chatinput-wrapper {
   width: 100%;
   background-color: #fff;
-  border: 2rpx solid #ccc;
+  border-bottom: 1rpx solid #ccc;
   position: fixed;
   bottom: 0;
   left: 0;
@@ -47,12 +47,14 @@
 .chatinput-content {
   width: 100%;
   height: 100rpx;
+  box-sizing: border-box;
+  padding: 0 22rpx;
 }
 .chatinput-img{
   width: 60rpx;
   height: 60rpx;
   border-radius: 100%;
-  margin: 20rpx 20rpx;
+  margin: 20rpx 18rpx;
   display: inline-block;
 }
 .chatinput-img.emoji{
@@ -62,37 +64,38 @@
   opacity: .6;
 }
  .chatinput-input {
-  width: 466rpx;
-  min-height: 72rpx;
-  border-radius: 12rpx;
-  border: 1px solid #ccc;
-  margin-top: 15rpx;
+  min-width: 430rpx;
+  min-height: 60rpx;
+  border-radius: 60rpx;
+  border: none;
+  margin-top: 20rpx;
   display: inline-block;
-  vertical-align:top;
-  box-sizing:border-box;
+  vertical-align: top;
+  box-sizing: border-box;
   padding-left: 20rpx;
-  font-size: 30rpx;
+  font-size: 28rpx;
+  color: #888888;
+  background: #f0f0f0;
 }
 .chatinput-voice-mask {
-  width: 466rpx;
-  height: 76rpx;
-  line-height: 76rpx;
+  width: 500rpx;
+  height: 60rpx;
+  line-height: 60rpx;
   display: inline-block;
-  border-radius: 12rpx;
-  border: 1px solid #ccc;
-  margin-top: 12rpx;
+  border-radius: 60rpx;
+  margin-top: 20rpx;
   vertical-align:top;
   box-sizing:border-box;
   /* padding-left: 20rpx; */
-  font-size: 30rpx;
+  font-size: 28rpx;
   text-align: center;
-  color: #333336;
-  background-color: #fff;
-  letter-spacing: 4rpx;
+  color: #888888;
+  background-color: #f0f0f0;
+  letter-spacing: 2rpx;
 }
 .chatinput-voice-mask-hover {
-  background-color: #cecece;
-  color: #333336;
+  background-color: #b1b1b1;
+  color: #ffffff;
 }
 /*subcontent wrapper  */
 .chatinput-subcontent {
@@ -105,24 +108,30 @@
 }
 /* more-subcontent */
 .more-subcontent {
-  padding: 40rpx 30rpx;
-  border:2rpx solid #ccc;
+  padding: 44rpx  0 0 30rpx;
+  border-top: 1rpx solid #d9d9d9;
+  /* border:2rpx solid #ccc; */
+  background: #f6f6f6;
 }
 .more-subcontent .more-subcontent-item {
   display:flex;
   flex-direction:column;
-  margin-bottom: 30rpx;
+  margin-left: 40rpx;
+  margin-bottom: 38rpx;
 }
 .more-subcontent .more-subcontent-item .image {
-  width:112rpx;
-  height:112rpx;
-  border-radius:50%;
-  margin-bottom: 12rpx;
+  width: 132rpx;
+  height: 132rpx;
+  margin-bottom: 20rpx;
 }
+.more-subcontent .more-subcontent-item:first-child{
+  margin-left: 0
+}
+
 .more-subcontent .more-subcontent-item .text {
   font-size: 24rpx;
   text-align:center;
-  color: #6C7074;
+  color: #666666;
 }
 /*聊天记录  */
 .record-wrapper {
@@ -132,7 +141,7 @@
 }
 .record-chatting-item {
   width: 100%;
-  padding: 20rpx 20rpx;
+  padding: 16rpx 20rpx;
   box-sizing: border-box;
 }
 .record-item-time-wrapper {
@@ -141,34 +150,36 @@
   justify-content:center;
 }
 .record-item-time {
-  padding:4rpx 10rpx;
-  background: #D6D6D6;
-  border-radius: 8rpx;
-  font-size: 24rpx;
-  color: #fff;
+  /* padding:4rpx 10rpx; */
+  /* background: #D6D6D6; */
+  /* border-radius: 8rpx; */
+  font-size: 20rpx;
+  color: #888888;
 }
 .record-chatting-item-img {
-  width: 80rpx;
-  height: 80rpx;
+  width: 70rpx;
+  height: 70rpx;
   border-radius: 100%;
   display: inline-block;
 }
 
 .record-chatting-item-text {
-  max-width: 70%;
+  max-width: 570rpx;
   border-radius: 8rpx;
-  background-color: #3387FF;
-  padding: 16rpx;
+  background-color: #00aeea;
+  padding: 16rpx 18rpx;
   box-sizing:border-box;
   word-wrap:break-word;
   overflow: hidden;
-  font-size: 32rpx;
-  line-height: 48rpx;
+  font-size: 28rpx;
+  line-height: 40rpx;
 }
 .record-chatting-item-text.nobg {
   background: transparent;
   margin-left: 20rpx;
   margin-right: 20rpx;
+
+  padding: 0;
 }
 /* tip消息富文本 */
 .tip-rich-text {
@@ -195,22 +206,22 @@
   justify-content: flex-start;
   color: #222;
 }
-.left-triangle{
+/* .left-triangle{
   height:0px;
   width:0px;
   border-width:20rpx;
   border-style:solid;
   border-color:transparent #fff transparent transparent;
   margin-top: 20rpx;
-}
-.right-triangle{
+} */
+/* .right-triangle{
   height:0px;
   width:0px;
   border-width:20rpx;
   border-style:solid;
-  border-color:transparent transparent transparent #3387FF;
+  border-color:transparent transparent transparent #00aeea;
   margin-top: 20rpx;
-}
+} */
 .video-triangle {
   height:0px;
   width:0px;
@@ -282,7 +293,7 @@
 
 .audio-wrapper {
   background-color:#fff;
-  border-radius:28rpx;
+  border-radius:8rpx;
   display:flex;
   justify-content:space-between;
   padding:0 20rpx;
@@ -291,11 +302,118 @@
   margin-left:-2px;
 }
 .audio-wrapper .image {
-  width:70rpx;
-  height:70rpx;
+  width:23rpx;
+  height:30rpx;
   align-self:center;
 }
 .audio-wrapper .text {
   align-self:center;
   color:#fff;
+}
+
+
+.self .record-chatting-item-text,
+.self .audio-wrapper{
+  margin-right: 20rpx;
+}
+.other .record-chatting-item-text,
+.other .audio-wrapper{
+  margin-left: 20rpx;
+}
+
+/*发送按钮*/
+.chatinput-sendbtn {
+  display: block;
+  margin: 20rpx 18rpx;
+  width: 130rpx;
+  height: 60rpx;
+  line-height: 60rpx;
+  text-align: center;
+  color: #fefefe;
+  font-size: 28rpx;
+  background: #ff7500;
+  border-radius: 60rpx;
+}
+button::after{
+  border: none;
+}
+
+.w500{width: 500rpx;}
+.w430{width: 430rpx;}
+
+
+/*自定义卡片样式*/
+.tfimline1 {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.tfim_line2 {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.tfim-winchart-content {
+  position: relative;
+  /* padding: 10rpx; */
+  border-radius: 5rpx;
+  -webkit-border-radius: 5rpx;
+  -moz-border-radius: 5rpx;
+  box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  word-break: break-all;
+  word-wrap: break-word;
+  background-color: #fff;
+  font-size: 14rpx;
+  color: #212121;
+  max-width: 750px;
+}
+.tfim-winchart-content-text {
+  max-width: 230rpx;
+  min-height: 24rpx;
+  line-height: 24rpx;
+  white-space: normal;
+  word-break: break-all;
+}
+
+.tfim-winchart-content-card-l {
+  width: 179rpx;
+  height: 133rpx;
+  float: left;
+}
+.tfim-winchart-content-card-l img {
+  width: 100%;
+  height: 100%;
+}
+.tfim-winchart-content-card-r {
+  width: 320rpx;
+  float: left;
+  margin-left: 25rpx;
+}
+.tfim-winchart-content-card-title {
+  font-size: 26rpx;
+  color: #212121;
+  line-height: 34rpx;
+  max-height: 68rpx;
+  overflow: hidden;
+}
+.tfim-winchart-content-card-place {
+  font-size: 22rpx;
+  color: #8a8a8a;
+  height: 24rpx;
+  line-height: 24rpx;
+  margin-top: 4rpx;
+}
+.tfim-winchart-content-card-price {
+  font-size: 22rpx;
+  color: #ff7500;
+  margin-top: 4rpx;
+}
+.tfim-winchart-content-card-price span{
+	font-size: 30rpx;
+	color: #ff7500;
 }

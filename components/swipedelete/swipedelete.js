@@ -11,12 +11,13 @@ Component({
    */
   methods: {
     deleteItem: function (e) {
+      console.log('deleteItem')
       this.setData({
         translateX: 0
       })
-      this.triggerEvent('deleteChatItem', {}, {bubbles: true})
+      // this.triggerEvent('deleteChatItem', {}, {bubbles: true})
     },
-    /**
+    /** 
      * 滑动删除事件-滑动开始
      */
     touchStartHandler: function(e) {

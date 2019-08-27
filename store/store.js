@@ -14,7 +14,7 @@ const INITIAL_STATE = {
   personList: {}, // 所有有信息的人的列表
   unreadInfo: {}, // 未读信息，包含已、未订阅的账户数
   rawMessageList: {}, // 所有的聊天列表都在里面
-  notificationList: { system: [], custom: [] }, // 系统通知，分为自定义消息和系统消息
+  // notificationList: { system: [], custom: [] }, // 系统通知，分为自定义消息和系统消息
   // netcallEvent: {type: '', payload: null}, // 音视频事件载荷
   // netcallCallList: [], // 多人通话呼叫列表
   // netcallGroupCallInfo: {} // 群组音视频被叫时通知信息
