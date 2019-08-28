@@ -18,7 +18,7 @@
           <view class='video-triangle'></view>
           <view style='color: #000;'>{{message.file.dur / 1000 << 1 >> 1}}''</view>
         </view>
-        <view wx:if="{{message.type === 'audio'}}" class='audio-wrapper' data-audio="{{message.audio}}" catchtap='playAudio' style='background-color:#3387FF;color: #000;'>
+        <view wx:if="{{message.type === 'audio'}}" class='audio-wrapper' data-audio="{{message.audio}}" catchtap='playAudio' style='background-color:#00aeea;color: #999;'>
           <image src='{{iconBase64Map.iconVoiceWhite}}' class='image'></image>
           <text class='text'>{{message.audio.dur / 1000 << 1 >> 1}}''</text>
         </view>

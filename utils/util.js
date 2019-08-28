@@ -423,6 +423,7 @@ function generateImageNode(file) {
     attrs: {
       width: `${width}rpx`,
       height: `${height}rpx`,
+      style:'display:flex ;',
       src: file.url
     }
   })

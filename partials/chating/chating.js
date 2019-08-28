@@ -322,65 +322,65 @@ let pageConfig = {
   /**
    * 发送自定义消息-猜拳
    */
-  sendFingerGuess() {
-    let self = this
-    self.setData({
-      moreFlag: false
-    })
-    let content = {
-      type: 1,
-      data: {
-        value: Math.ceil(Math.random() * 3)
-      }
-    }
-    app.globalData.nim.sendCustomMsg({
-      scene: self.data.chatType === 'p2p' ? 'p2p' : 'team',
-      to: self.data.chatTo,
-      content: JSON.stringify(content),
-      done: function (err, msg) {
-        // 判断错误类型，并做相应处理
-        if (self.handleErrorAfterSend(err)) {
-          return
-        }
-        // 存储数据到store
-        self.saveChatMessageListToStore(msg)
+  // sendFingerGuess() {
+  //   let self = this
+  //   self.setData({
+  //     moreFlag: false
+  //   })
+  //   let content = {
+  //     type: 1,
+  //     data: {
+  //       value: Math.ceil(Math.random() * 3)
+  //     }
+  //   }
+  //   app.globalData.nim.sendCustomMsg({
+  //     scene: self.data.chatType === 'p2p' ? 'p2p' : 'team',
+  //     to: self.data.chatTo,
+  //     content: JSON.stringify(content),
+  //     done: function (err, msg) {
+  //       // 判断错误类型，并做相应处理
+  //       if (self.handleErrorAfterSend(err)) {
+  //         return
+  //       }
+  //       // 存储数据到store
+  //       self.saveChatMessageListToStore(msg)
 
-        // 滚动到底部
-        self.scrollToBottom()
-      }
-    })
-  },
+  //       // 滚动到底部
+  //       self.scrollToBottom()
+  //     }
+  //   })
+  // },
   /**
    * 点击发送tip按钮
    */
-  tipInputConfirm() {
-    let self = this
-    if (self.data.tipInputValue.length !== 0) {
-      app.globalData.nim.sendTipMsg({
-        scene: self.data.chatType === 'p2p' ? 'p2p' : 'team',
-        to: self.data.chatTo,
-        tip: self.data.tipInputValue,
-        done: function (err, msg) {
-          // 判断错误类型，并做相应处理
-          if (self.handleErrorAfterSend(err)) {
-            return
-          }
-          // 存储数据到store
-          self.saveChatMessageListToStore(msg)
+  // tipInputConfirm() {
+  //   let self = this
+  //   if (self.data.tipInputValue.length !== 0) {
+  //     app.globalData.nim.sendTipMsg({
+  //       scene: self.data.chatType === 'p2p' ? 'p2p' : 'team',
+  //       to: self.data.chatTo,
+  //       tip: self.data.tipInputValue,
+  //       done: function (err, msg) {
+  //         // 判断错误类型，并做相应处理
+  //         if (self.handleErrorAfterSend(err)) {
+  //           return
+  //         }
+  //         // 存储数据到store
+  //         self.saveChatMessageListToStore(msg)
 
-          self.setData({
-            tipInputValue: '',
-            tipFlag: false
-          })
+  //         self.setData({
+  //           tipInputValue: '',
+  //           tipFlag: false
+  //         })
 
-          // 滚动到底部
-          self.scrollToBottom()
-        }
-      })
-    } else {
-      showToast('text', '请输入内容')
-    }
-  },
+  //         // 滚动到底部
+  //         self.scrollToBottom()
+  //       }
+  //     })
+  //   } else {
+  //     showToast('text', '请输入内容')
+  //   }
+  // },
   /**
    * 发送语音消息
    */
@@ -656,32 +656,32 @@ let pageConfig = {
   /**
    * tip输入
    */
-  tipInputChange(e) {
-    this.setData({
-      tipInputValue: e.detail.value
-    })
-  },
+  // tipInputChange(e) {
+  //   this.setData({
+  //     tipInputValue: e.detail.value
+  //   })
+  // },
   /**
    * 组件按钮回调
    */
-  tipClickHandler(e) {
-    let data = e.detail.data
-    if (data === 'confirm') {
-      if (this.data.tipInputValue.length === 0) {
-        showToast('text', '请输入内容')
+  // tipClickHandler(e) {
+  //   let data = e.detail.data
+  //   if (data === 'confirm') {
+  //     if (this.data.tipInputValue.length === 0) {
+  //       showToast('text', '请输入内容')
 
-      } else {
-        this.tipInputConfirm()
-        this.setData({
-          tipFlag: false
-        })
-      }
-    } else if (data === 'cancel') {
-      this.setData({
-        tipFlag: false
-      })
-    }
-  },
+  //     } else {
+  //       this.tipInputConfirm()
+  //       this.setData({
+  //         tipFlag: false
+  //       })
+  //     }
+  //   } else if (data === 'cancel') {
+  //     this.setData({
+  //       tipFlag: false
+  //     })
+  //   }
+  // },
   /**
    * 切换出emoji键盘
    */
@@ -706,12 +706,12 @@ let pageConfig = {
   /**
    * 调出tip发送面板
    */
-  showTipMessagePanel() {
-    this.setData({
-      tipFlag: true,
-      moreFlag: false
-    })
-  },
+  // showTipMessagePanel() {
+  //   this.setData({
+  //     tipFlag: true,
+  //     moreFlag: false
+  //   })
+  // },
   /**
    * 微信按钮长按，有bug，有时候不触发
    */
@@ -907,63 +907,63 @@ let pageConfig = {
   /**
    * 选取位置
    */
-  choosePosition() {
-    let self = this
-    self.setData({
-      moreFlag: false
-    })
-    wx.getSetting({
-      success: (res) => {
-        let auth = res.authSetting['scope.userLocation']
-        if (auth == false) { //已申请过授权，但是用户拒绝
-          wx.openSetting({
-            success: function (res) {
-              if (res.authSetting['scope.userLocation'] == true) {
-                showToast('success', '授权成功')
-              } else {
-                showToast('text', '请授权地理位置')
-              }
-            }
-          })
-        } else if (auth == true) { // 用户已经同意授权
-          self.callSysMap()
-        } else { // 第一次进来，未发起授权
-          wx.authorize({
-            scope: 'scope.userLocation',
-            success: () => {//授权成功
-              self.callSysMap()
-            }
-          })
-        }
-      },
-      fail: (res) => {
-        showToast('error', '鉴权失败，请重试')
-      }
-    })
-  },
+  // choosePosition() {
+  //   let self = this
+  //   self.setData({
+  //     moreFlag: false
+  //   })
+  //   wx.getSetting({
+  //     success: (res) => {
+  //       let auth = res.authSetting['scope.userLocation']
+  //       if (auth == false) { //已申请过授权，但是用户拒绝
+  //         wx.openSetting({
+  //           success: function (res) {
+  //             if (res.authSetting['scope.userLocation'] == true) {
+  //               showToast('success', '授权成功')
+  //             } else {
+  //               showToast('text', '请授权地理位置')
+  //             }
+  //           }
+  //         })
+  //       } else if (auth == true) { // 用户已经同意授权
+  //         self.callSysMap()
+  //       } else { // 第一次进来，未发起授权
+  //         wx.authorize({
+  //           scope: 'scope.userLocation',
+  //           success: () => {//授权成功
+  //             self.callSysMap()
+  //           }
+  //         })
+  //       }
+  //     },
+  //     fail: (res) => {
+  //       showToast('error', '鉴权失败，请重试')
+  //     }
+  //   })
+  // },
   /**
    * 视频通话
    */
-  videoCall() {
-    if (app.globalData.waitingUseVideoCall) {
-      showToast('text', '请勿频繁操作', {duration: 2000})
-      return
-    }
-    if (this.data.chatType === 'advanced' || this.data.chatType === 'normal') { // 群组
-      if (this.data.currentGroup.memberNum.length < 2) {
-        showToast('text', '无法发起，人数少于2人')
-      } else {
-        wx.navigateTo({
-          url: `../forwardMultiContact/forwardMultiContact?teamId=${this.data.currentGroup.teamId}`,
-        })
-      }
-    } else { // p2p
-      console.log(`正在发起对${this.data.chatTo}的视频通话`)
-      wx.navigateTo({
-        url: `../videoCall/videoCall?callee=${this.data.chatTo}`,
-      })
-    }
-  },
+  // videoCall() {
+  //   if (app.globalData.waitingUseVideoCall) {
+  //     showToast('text', '请勿频繁操作', {duration: 2000})
+  //     return
+  //   }
+  //   if (this.data.chatType === 'advanced' || this.data.chatType === 'normal') { // 群组
+  //     if (this.data.currentGroup.memberNum.length < 2) {
+  //       showToast('text', '无法发起，人数少于2人')
+  //     } else {
+  //       wx.navigateTo({
+  //         url: `../forwardMultiContact/forwardMultiContact?teamId=${this.data.currentGroup.teamId}`,
+  //       })
+  //     }
+  //   } else { // p2p
+  //     console.log(`正在发起对${this.data.chatTo}的视频通话`)
+  //     wx.navigateTo({
+  //       url: `../videoCall/videoCall?callee=${this.data.chatTo}`,
+  //     })
+  //   }
+  // },
   /**
    * 调用系统地图界面
    */
@@ -1156,12 +1156,12 @@ let pageConfig = {
   /**
    * 转发消息
    */
-  forwardMessage(paramObj) {
-    let str = encodeURIComponent(JSON.stringify(paramObj))
-    wx.redirectTo({
-      url: '../forwardContact/forwardContact?data=' + str,
-    })
-  },
+  // forwardMessage(paramObj) {
+  //   let str = encodeURIComponent(JSON.stringify(paramObj))
+  //   wx.redirectTo({
+  //     url: '../forwardContact/forwardContact?data=' + str,
+  //   })
+  // },
   /**
    * 撤回消息
    */
@@ -1344,7 +1344,6 @@ let pageConfig = {
         displayTimeHeader
       }, specifiedObject))
     }
-    console.log(messageArr)
     return messageArr
   },
 }
@@ -1352,6 +1351,7 @@ let pageConfig = {
 let mapStateToData = (state) => {
   let sessionId = state.currentChatTo
   let messageArr = pageConfig.convertRawMessageListToRenderMessageArr(state.rawMessageList[sessionId])
+  console.log(messageArr)
   return {
     friendCard: state.friendCard,
     personList: state.personList,

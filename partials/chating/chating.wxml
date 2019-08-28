@@ -4,11 +4,11 @@
     <video id="videoEle" src="{{videoSrc}}" bindended="videoEnded" show-fullscreen-btn="{false}" controls style='width:100%;height:100%;'></video>
   </view> -->
 <!-- tip消息 -->
-  <view catchtap='stopEventPropagation'>
+  <!-- <view catchtap='stopEventPropagation'>
     <input-modal wx:if="{{tipFlag}}" title="输入提醒" catch:inputModalClick="tipClickHandler">
       <input placeholder='请输入文本' type='text' confirm-type='send' class='modal-input' bindinput='tipInputChange' bindconfirm='tipInputConfirm'></input>
     </input-modal>
-  </view>
+  </view> -->
   <!-- 历史消息 -->
   <view wx:if="{{chatType === 'p2p'}}" class='chating-history' catchtap='lookMessage'>
     <text class='chating-history-left'>历史消息</text>
@@ -30,7 +30,9 @@
       <view class='record-item-time-wrapper' wx:if="{{message.displayTimeHeader != ''}}">
         <text class='record-item-time'>{{message.displayTimeHeader}}</text>
       </view>
+      <!--send 发送的消息-->
       <view wx:if="{{message.sendOrReceive == 'send'}}" class='{{message.sendOrReceive == "send" ? "record-chatting-item self" : ""}}' style='justify-content: {{message.type === "tip" || message.type === "notification" ? "center" : "flex-end"}}' data-message="{{message}}" bindlongpress='showEditorMenu'>
+        <view class="record-chatting-item-unread">已读 </view>
         <view wx:if="{{message.type === 'geo'}}" data-geo='{{message.geo}}' class='small-map-wrapper' catchtap='fullScreenMap'>
           <image src="../../images/map.png" class='small-geo-img'></image>
           <text class='text'>{{message.geo.title}}</text>
@@ -49,7 +51,9 @@
         <rich-text wx:if="{{message.type === 'tip' || message.type === 'notification'}}" class='tip-rich-text' nodes="{{message.nodes}}"></rich-text>
         <!-- <text wx:if="{{message.type !== 'tip' && message.type !== 'notification' && message.type !== 'image' && message.type !== 'video' && message.type !== 'geo' && message.type !== '猜拳' && message.type !== '贴图表情' }}" class='right-triangle'></text> -->
         <image wx:if="{{message.type !== 'tip' && message.type !== 'notification'}}" src='{{loginAccountLogo}}' catchtap='switchToMyTab' class='record-chatting-item-img'></image>
+        
       </view>
+      <!--receive 收到的消息-->
       <view wx:if="{{message.sendOrReceive == 'receive'}}" class='{{message.sendOrReceive == "receive" ? "record-chatting-item other" : ""}}' style='justify-content: {{message.type === "tip" || message.type === "notification" ? "center" : "flex-start"}}' data-message="{{message}}"  bindlongpress='showEditorMenu'>
         <image wx:if="{{message.type !== 'tip' && message.type !== 'notification'}}" catchtap='switchPersonCard' data-account='{{message.from}}' src='{{personList[message.from] && personList[message.from].avatar || defaultUserLogo}}' class='record-chatting-item-img'></image>
         <!-- <text wx:if="{{message.type !== 'tip' && message.type !== 'notification' && message.type !== 'image' && message.type !== 'video' && message.type !== 'geo' && message.type !== '猜拳' && message.type !== '贴图表情' }}" class='left-triangle'></text> -->

@@ -315,10 +315,12 @@
 .self .record-chatting-item-text,
 .self .audio-wrapper{
   margin-right: 20rpx;
+  margin-left: 0;
 }
 .other .record-chatting-item-text,
 .other .audio-wrapper{
   margin-left: 20rpx;
+  margin-right: 0;
 }
 
 /*发送按钮*/
@@ -340,7 +342,13 @@ button::after{
 
 .w500{width: 500rpx;}
 .w430{width: 430rpx;}
-
+.record-chatting-item-unread{
+  align-self: flex-end;
+  margin-right: 8rpx;
+  font-size: 20rpx;
+  color: #888888;
+  vertical-align: bottom;
+}
 
 /*自定义卡片样式*/
 .tfimline1 {
@@ -417,3 +425,4 @@ button::after{
 	font-size: 30rpx;
 	color: #ff7500;
 }
+

@@ -137,7 +137,6 @@ let pageConfig = {
    * 捕获从滑动删除传递来的事件
    */
   catchDeleteTap(e) {
-    console.log('catchDeleteTap----我要删除数据了',e)
     let session = e.currentTarget.dataset.session
     let account = session.split('-')
     let chatAccount = Object.assign({}, this.data.chatAccount)
@@ -183,7 +182,6 @@ let pageConfig = {
    * 单击进入聊天页面
    */
   switchToChating(e) {
-    console.log('单击进入聊天页面')
     let account = e.currentTarget.dataset.account
     let session = e.currentTarget.dataset.session
     // 更新会话对象
@@ -214,8 +212,6 @@ let pageConfig = {
    * 单击进入个人区域
    */
   switchToPersonCard(e) {
-    console.log('单击进入个人区域')
-    return;
     // let account = e.currentTarget.dataset.account
     // if (account === 'ai-assistant') {
     //   return
