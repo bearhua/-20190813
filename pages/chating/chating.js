@@ -22,10 +22,10 @@ let pageConfig = {
     chatType: '', //聊天类型 advanced 高级群聊 normal 讨论组群聊 p2p 点对点聊天
     loginAccountLogo: '',  // 登录账户对象头像
     focusFlag: false,//控制输入框失去焦点与否
-    emojiFlag: false,//emoji键盘标志位
+    // emojiFlag: false,//emoji键盘标志位
     moreFlag: false, // 更多功能标志
-    tipFlag: false, // tip消息标志
-    tipInputValue: '', // tip消息文本框内容
+    // tipFlag: false, // tip消息标志
+    // tipInputValue: '', // tip消息文本框内容
     sendType: 0, //发送消息类型，0 文本 1 语音
     messageArr: [], //[{text, time, sendOrReceive: 'send', displayTimeHeader, nodes: []},{type: 'geo',geo: {lat,lng,title}}]
     inputValue: '',//文本框输入内容
@@ -99,7 +99,6 @@ let pageConfig = {
     //       }]
     //   }]
     // }],
-    btnFlag:false//365按钮标识
   },
   onUnload() {
     // 更新当前会话对象账户
@@ -154,8 +153,11 @@ let pageConfig = {
       chatWrapperMaxHeight,
     })
    
+
     // 重新计算所有时间
     self.reCalcAllMessageTime()
+    //计算已读回执
+    self.queryIsMsgRemoteRead()
     // 滚动到底部
     self.scrollToBottom()
     // app.globalData.emitter.on('callRejected', (data) => {
@@ -167,83 +169,90 @@ let pageConfig = {
    * 生命周期函数--监听页面展示
    */
   onShow: function () {
-    let chatType = this.data.chatType
-    if (chatType === 'advanced' || chatType === 'normal') {
-      let card = this.data.currentGroup
-      let memberNum = card.memberNum || 0
-      let title = card.name
-      wx.setNavigationBarTitle({
-        title: (title.length > 8 ? title.slice(0, 8) + '…' : title) + '（' + memberNum + '）',
-      })
-    }
+    // let chatType = this.data.chatType
+    // if (chatType === 'advanced' || chatType === 'normal') {
+    //   let card = this.data.currentGroup
+    //   let memberNum = card.memberNum || 0
+    //   let title = card.name
+    //   wx.setNavigationBarTitle({
+    //     title: (title.length > 8 ? title.slice(0, 8) + '…' : title) + '（' + memberNum + '）',
+    //   })
+    // }
   },
   /**
    * 获取群组成员列表
    */
-  getMemberList(teamId) {
-    app.globalData.nim.getTeamMembers({
-      teamId: teamId,
-      done: (error, obj) => {
-        if (error) {
-          console.log(error, '获取群成员失败')
-          return
-        }
-        store.dispatch({
-          type: 'Get_Group_Members_And_Set_Current',
-          payload: obj
-        })
-      }
-    })
-  },
+  // getMemberList(teamId) {
+  //   app.globalData.nim.getTeamMembers({
+  //     teamId: teamId,
+  //     done: (error, obj) => {
+  //       if (error) {
+  //         console.log(error, '获取群成员失败')
+  //         return
+  //       }
+  //       store.dispatch({
+  //         type: 'Get_Group_Members_And_Set_Current',
+  //         payload: obj
+  //       })
+  //     }
+  //   })
+  // },
   /**
    * 文本框输入事件
    */
   inputChange(e) {
     console.log('文本框输入事件')
     this.setData({
-      inputValue: e.detail.value,
-      btnFlag: e.detail.value ? true : false
+      inputValue: e.detail.value
     })
   },
   /**
    * 键盘单击发送，发送文本
    */
   inputSend(e) {
+    console.log(e)
     this.sendRequest(e.detail.value)
+  },
+  /**
+   * 发送按钮单击发送，发送文本
+   */
+  sendMsg(e) {
+    let text = this.data.inputValue
+    this.sendRequest(text)
   },
   /**
    * emoji组件回调
    */
-  emojiCLick(e) { 
-    let val = e.detail
-    // 单击删除按钮，，删除emoji
-    if (val == '[删除]') {
-      let lastIndex = this.data.inputValue.lastIndexOf('[')
-      if (lastIndex != -1) {
-        this.setData({
-          inputValue: this.data.inputValue.slice(0, lastIndex)
-        })
-      }
-      return
-    }
-    if (val[0] == '[') { // emoji
-      this.setData({
-        inputValue: this.data.inputValue + val
-      })
-    } else {//大图
-      this.sendBigEmoji(val)
-    }
-  },
+  // emojiCLick(e) { 
+  //   let val = e.detail
+  //   // 单击删除按钮，，删除emoji
+  //   if (val == '[删除]') {
+  //     let lastIndex = this.data.inputValue.lastIndexOf('[')
+  //     if (lastIndex != -1) {
+  //       this.setData({
+  //         inputValue: this.data.inputValue.slice(0, lastIndex)
+  //       })
+  //     }
+  //     return
+  //   }
+  //   if (val[0] == '[') { // emoji
+  //     this.setData({
+  //       inputValue: this.data.inputValue + val
+  //     })
+  //   } else {//大图
+  //     this.sendBigEmoji(val)
+  //   }
+  // },
   /**
    * emoji点击发送
    */
-  emojiSend(e) {
-    let val = this.data.inputValue
-    this.sendRequest(val)
-    this.setData({
-      emojiFlag: false
-    })
-  },
+  // emojiSend(e) {
+  //   let val = this.data.inputValue
+  //   this.sendRequest(val)
+  //   this.setData({
+  //     emojiFlag: false
+  //   })
+  // },
   /**
    * 发送网络请求：发送文本消息(包括emoji)
    */
@@ -274,51 +283,51 @@ let pageConfig = {
    * 发送大的emoji:实际上是type=3的自定义消息
    * {"type":3,"data":{"catalog":"ajmd","chartlet":"ajmd010"}}
    */
-  sendBigEmoji(val) {
-    wx.showLoading({
-      title: '发送中...',
-    })
-    let self = this
-    let catalog = ''
-    if (val[0] === 'a') {
-      catalog = 'ajmd'
-    } else if (val[0] === 'x') {
-      catalog = 'xxy'
-    } else if (val[0] === 'l') {
-      catalog = 'lt'
-    }
-    let content = {
-      type: 3,
-      data: {
-        catalog,
-        chartlet: val
-      }
-    }
-    app.globalData.nim.sendCustomMsg({
-      scene: self.data.chatType === 'p2p' ? 'p2p' : 'team',
-      to: self.data.chatTo,
-      content: JSON.stringify(content),
-      done: function (err, msg) {
-        wx.hideLoading()
-        // 判断错误类型，并做相应处理
-        if (self.handleErrorAfterSend(err)) {
-          return
-        }
-        // 存储数据到store
-        self.saveChatMessageListToStore(msg)
+  // sendBigEmoji(val) {
+  //   wx.showLoading({
+  //     title: '发送中...',
+  //   })
+  //   let self = this
+  //   let catalog = ''
+  //   if (val[0] === 'a') {
+  //     catalog = 'ajmd'
+  //   } else if (val[0] === 'x') {
+  //     catalog = 'xxy'
+  //   } else if (val[0] === 'l') {
+  //     catalog = 'lt'
+  //   }
+  //   let content = {
+  //     type: 3,
+  //     data: {
+  //       catalog,
+  //       chartlet: val
+  //     }
+  //   }
+  //   app.globalData.nim.sendCustomMsg({
+  //     scene: self.data.chatType === 'p2p' ? 'p2p' : 'team',
+  //     to: self.data.chatTo,
+  //     content: JSON.stringify(content),
+  //     done: function (err, msg) {
+  //       wx.hideLoading()
+  //       // 判断错误类型，并做相应处理
+  //       if (self.handleErrorAfterSend(err)) {
+  //         return
+  //       }
+  //       // 存储数据到store
+  //       self.saveChatMessageListToStore(msg)
 
-        // 隐藏发送栏
-        self.setData({
-          focusFlag: false,
-          emojiFlag: false,
-          tipFlag: false,
-          moreFlag: false
-        })
-        // 滚动到底部
-        self.scrollToBottom()
-      }
-    })
-  },
+  //       // 隐藏发送栏
+  //       self.setData({
+  //         focusFlag: false,
+  //         emojiFlag: false,
+  //         tipFlag: false,
+  //         moreFlag: false
+  //       })
+  //       // 滚动到底部
+  //       self.scrollToBottom()
+  //     }
+  //   })
+  // },
   /**
    * 发送自定义消息-猜拳
    */
@@ -545,8 +554,8 @@ let pageConfig = {
   foldInputArea() {
     this.setData({
       focusFlag: false,
-      emojiFlag: false,
-      tipFlag: false,
+      // emojiFlag: false,
+      // tipFlag: false,
       moreFlag: false
     })
   },
@@ -626,14 +635,29 @@ let pageConfig = {
     })
   },
   /**
+   * House365 查询消息是否已被对方读过
+   */
+  queryIsMsgRemoteRead(){
+    let tempArr = [...this.data.messageArr]
+    if(tempArr.length == 0) return
+    // app.globalData.nim.isMsgRemoteRead(msg)
+    tempArr.map((msg, index) => {
+      msg['isReaded'] = app.globalData.nim.isMsgRemoteRead(msg.msg)
+      console.log('isMsgRemoteRead',msg.msg, app.globalData.nim.isMsgRemoteRead(msg.msg))
+    })
+    
+    this.setData({
+      messageArr: tempArr
+    })
+  },
+  /**
    * 切换发送文本类型
    */
   switchSendType() {
     this.setData({
       sendType: this.data.sendType == 0 ? 1 : 0,
       focusFlag: false,
-      emojiFlag: false,
-      btnFlag: false
+      // emojiFlag: false,
     })
   },
   /**
@@ -641,7 +665,7 @@ let pageConfig = {
    */
   inputFocus(e) {
     this.setData({
-      emojiFlag: false,
+      // emojiFlag: false,
       focusFlag: true
     })
   },
@@ -689,7 +713,7 @@ let pageConfig = {
     this.setData({
       sendType: 0,
       // focusFlag: this.data.emojiFlag ? true : false,
-      emojiFlag: !this.data.emojiFlag,
+      // emojiFlag: !this.data.emojiFlag,
       moreFlag: false
     })
   },
@@ -699,7 +723,7 @@ let pageConfig = {
   toggleMore() {
     this.setData({
       moreFlag: !this.data.moreFlag,
-      emojiFlag: false,
+      // emojiFlag: false,
       focusFlag: false
     })
   },
@@ -907,40 +931,40 @@ let pageConfig = {
   /**
    * 选取位置
    */
-  // choosePosition() {
-  //   let self = this
-  //   self.setData({
-  //     moreFlag: false
-  //   })
-  //   wx.getSetting({
-  //     success: (res) => {
-  //       let auth = res.authSetting['scope.userLocation']
-  //       if (auth == false) { //已申请过授权，但是用户拒绝
-  //         wx.openSetting({
-  //           success: function (res) {
-  //             if (res.authSetting['scope.userLocation'] == true) {
-  //               showToast('success', '授权成功')
-  //             } else {
-  //               showToast('text', '请授权地理位置')
-  //             }
-  //           }
-  //         })
-  //       } else if (auth == true) { // 用户已经同意授权
-  //         self.callSysMap()
-  //       } else { // 第一次进来，未发起授权
-  //         wx.authorize({
-  //           scope: 'scope.userLocation',
-  //           success: () => {//授权成功
-  //             self.callSysMap()
-  //           }
-  //         })
-  //       }
-  //     },
-  //     fail: (res) => {
-  //       showToast('error', '鉴权失败，请重试')
-  //     }
-  //   })
-  // },
+  choosePosition() {
+    let self = this
+    self.setData({
+      moreFlag: false
+    })
+    wx.getSetting({
+      success: (res) => {
+        let auth = res.authSetting['scope.userLocation']
+        if (auth == false) { //已申请过授权，但是用户拒绝
+          wx.openSetting({
+            success: function (res) {
+              if (res.authSetting['scope.userLocation'] == true) {
+                showToast('success', '授权成功')
+              } else {
+                showToast('text', '请授权地理位置')
+              }
+            }
+          })
+        } else if (auth == true) { // 用户已经同意授权
+          self.callSysMap()
+        } else { // 第一次进来，未发起授权
+          wx.authorize({
+            scope: 'scope.userLocation',
+            success: () => {//授权成功
+              self.callSysMap()
+            }
+          })
+        }
+      },
+      fail: (res) => {
+        showToast('error', '鉴权失败，请重试')
+      }
+    })
+  },
   /**
    * 视频通话
    */
@@ -998,6 +1022,7 @@ let pageConfig = {
    * 切换到对方介绍页
    */
   switchPersonCard(data) {
+    console.log(data)
     // if (this.data.chatType === 'p2p') {
     //   if (this.data.chatTo === this.data.userInfo.account || this.data.chatTo === 'ai-assistant') {
     //     return
@@ -1227,13 +1252,13 @@ let pageConfig = {
     for(let time in rawMsgList) {
       let rawMsg = rawMsgList[time]
       let msgType = ''
-      if (rawMsg.type === 'custom' && JSON.parse(rawMsg['content'])['type'] === 1) {
-        msgType = '猜拳'
-      } else if (rawMsg.type === 'custom' && JSON.parse(rawMsg['content'])['type'] === 3) {
-        msgType = '贴图表情'
-      } else {
+      // if (rawMsg.type === 'custom' && JSON.parse(rawMsg['content'])['type'] === 1) {
+      //   msgType = '猜拳'
+      // } else if (rawMsg.type === 'custom' && JSON.parse(rawMsg['content'])['type'] === 3) {
+      //   msgType = '贴图表情'
+      // } else {
         msgType = rawMsg.type
-      }
+      // }
       let displayTimeHeader = this.judgeOverTwoMinute(rawMsg.time, messageArr)
       let sendOrReceive = rawMsg.flow === 'in' ? 'receive' : 'send'
       let specifiedObject = {}
@@ -1275,13 +1300,13 @@ let pageConfig = {
         //   }
         //   break
         // }
-        case '贴图表情': {
-          let content = JSON.parse(rawMsg['content'])
-          specifiedObject = {
-            nodes: generateImageNode(generateBigEmojiImageFile(content))
-          }
-          break
-        }
+        // case '贴图表情': {
+        //   let content = JSON.parse(rawMsg['content'])
+        //   specifiedObject = {
+        //     nodes: generateImageNode(generateBigEmojiImageFile(content))
+        //   }
+        //   break
+        // }
         case 'tip': {
           specifiedObject = {
             text: rawMsg.tip,
@@ -1313,14 +1338,19 @@ let pageConfig = {
         //   }
         //   break
         // }
-        case 'custom':
-          specifiedObject = {
-            nodes: [{
-              type: 'text',
-              text: '自定义消息'
-            }]
+        case 'custom': {
+          let content = JSON.parse(rawMsg.content) || {}
+          let text = sendOrReceive === 'receive' ?'收到':'发送'
+          if (content.type === 8 && (content.data.type === "newhouse" || content.data.type === "secondhouse")){
+            specifiedObject = {
+              nodes: [{
+                type: 'text',
+                text: `${text}了一条不支持的消息，请前往淘房APP查看!`
+              }]
+            }
           }
-          break;
+          break
+        }
         // case 'notification':
         //   specifiedObject = {
         //     // netbill的text为空
@@ -1335,23 +1365,35 @@ let pageConfig = {
           break
         }
       }
+
       messageArr.push(Object.assign({}, {
         from: rawMsg.from,
         type: msgType,
         text: rawMsg.text || '',
         time,
         sendOrReceive,
-        displayTimeHeader
+        displayTimeHeader,
+        content : rawMsg.content || {},//365 卡片内容
+        msg : rawMsg//365 完整的信息，用来查询消息是否已读,
       }, specifiedObject))
     }
     return messageArr
   },
+  /**
+   * House365 跳转详情页
+   */
+  switchToDetail(e) {
+    console.log('switchToDetail，跳转详情页')
+    // let url = e.currentTarget.dataset.url
+    // wx.navigateTo({
+    //   url: url
+    // })
+  }
 }
 
 let mapStateToData = (state) => {
   let sessionId = state.currentChatTo
   let messageArr = pageConfig.convertRawMessageListToRenderMessageArr(state.rawMessageList[sessionId])
-  console.log(messageArr)
   return {
     friendCard: state.friendCard,
     personList: state.personList,

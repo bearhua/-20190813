@@ -1,5 +1,5 @@
 import {INITIAL_STATE} from './store.js'
-import dealGroupMsg from '../utils/dealGroupMsg.js'
+// import dealGroupMsg from '../utils/dealGroupMsg.js'
 // let app = getApp()
 let indexReducer = (state = INITIAL_STATE, action) => {
   const app = getApp()
@@ -189,59 +189,7 @@ let indexReducer = (state = INITIAL_STATE, action) => {
     //   tempState.friendCard[blackUser.account].addTime = blackUser.addTime
     //   return Object.assign({}, state, tempState)
     // }
-    // RawMessageList：存储原始消息
-    case 'RawMessageList_Add_Msg': {
-      /*
-        attach:{type: "acceptTeamInvite", team: {…}, account: "twilbeter3", users: Array(2), members: Array(1)}
-        cc:true
-        flow:"out"
-        from:"twilbeter"
-        fromClientType:"Web"
-        fromNick:""
-        idClient:"c86b07d8-c98f-4186-94a4-68c2db010ae2"
-        idServer:"93284035043786753"
-        isHistoryable:true
-        isLocal:false
-        isOfflinable:true
-        isPushable:true
-        isReplyMsg:true
-        isRoamingable:true
-        isSyncable:true
-        isUnreadable:true
-        needMsgReceipt:false
-        needPushNick:false
-        scene:"team"
-        sessionId:"team-1390040443"
-        status:"success"
-        target:"1390040443"
-        text:""
-        time:1536914522419
-        to:"1390040443"
-        type:"notification"
-      */
-      let tempState = Object.assign({}, state)
-      let { msg, nim } = action.payload
-      tempState.rawMessageList = Object.assign({}, tempState.rawMessageList)
-      // 自己的退群消息就不记录、展示了
-      // if (msg && msg.type === 'notification') { // 群通知消息  && msg.scene === 'team'
-      //   if ((msg.attach.type === 'leaveTeam' || msg.attach.type ===  'dismissTeam') && msg.from === tempState.userInfo.account) {
-      //     return tempState
-      //   }
-      //   dealGroupMsg.dealMsg(msg, tempState, tempState.userInfo.account)
-      // }
-      let sessionId = msg.sessionId
-      if (!tempState.rawMessageList[sessionId]) {
-        tempState.rawMessageList[sessionId] = {}
-      }
-      tempState.rawMessageList[sessionId][msg.time] = Object.assign({}, msg)
-      if (tempState.currentChatTo === msg.sessionId && nim) { // 当前会话,将未读数置为0
-        nim.resetSessionUnread(msg.sessionId)
-      }
-      let app = getApp()
-      console.log(app)
-      console.log('RawMessageList_Add_Msg', tempState.rawMessageList)
-      return Object.assign({}, state, tempState)
-    }
+    
     // RawMessageList：存储漫游消息
     case 'RawMessageList_Add_RoamingMsgList': {
       let tempState = Object.assign({}, state)
@@ -403,6 +351,57 @@ let indexReducer = (state = INITIAL_STATE, action) => {
     //   tempState.notificationList = { system: [], custom: [] }
     //   return Object.assign({}, state, tempState)
     // }
+    // RawMessageList：存储原始消息
+    case 'RawMessageList_Add_Msg': {
+      /*
+        attach:{type: "acceptTeamInvite", team: {…}, account: "twilbeter3", users: Array(2), members: Array(1)}
+        cc:true
+        flow:"out"
+        from:"twilbeter"
+        fromClientType:"Web"
+        fromNick:""
+        idClient:"c86b07d8-c98f-4186-94a4-68c2db010ae2"
+        idServer:"93284035043786753"
+        isHistoryable:true
+        isLocal:false
+        isOfflinable:true
+        isPushable:true
+        isReplyMsg:true
+        isRoamingable:true
+        isSyncable:true
+        isUnreadable:true
+        needMsgReceipt:false
+        needPushNick:false
+        scene:"team"
+        sessionId:"team-1390040443"
+        status:"success"
+        target:"1390040443"
+        text:""
+        time:1536914522419
+        to:"1390040443"
+        type:"notification"
+      */
+      let tempState = Object.assign({}, state)
+      let { msg, nim } = action.payload
+      tempState.rawMessageList = Object.assign({}, tempState.rawMessageList)
+      // 自己的退群消息就不记录、展示了
+      // if (msg && msg.type === 'notification') { // 群通知消息  && msg.scene === 'team'
+      //   if ((msg.attach.type === 'leaveTeam' || msg.attach.type ===  'dismissTeam') && msg.from === tempState.userInfo.account) {
+      //     return tempState
+      //   }
+      //   dealGroupMsg.dealMsg(msg, tempState, tempState.userInfo.account)
+      // }
+      let sessionId = msg.sessionId
+      if (!tempState.rawMessageList[sessionId]) {
+        tempState.rawMessageList[sessionId] = {}
+      }
+      if (tempState.currentChatTo === msg.sessionId && nim) { // 当前会话,将未读数置为0
+        nim.resetSessionUnread(msg.sessionId)
+      }
+      tempState.rawMessageList[sessionId][msg.time] = Object.assign({}, msg)
+      console.log('RawMessageList_Add_Msg', tempState.rawMessageList)
+      return Object.assign({}, state, tempState)
+    }
     // UnreadInfo：更新未读数
     case 'UnreadInfo_update': {
       let tempState = Object.assign({}, state)
@@ -416,6 +415,9 @@ let indexReducer = (state = INITIAL_STATE, action) => {
       }
       app.setTotalUnread(unreadTotal);
       console.log('更新未读数', tempState.unreadInfo, unreadTotal)
+
+      console.log('更新已读回执', updateSession.id, tempState.rawMessageList[updateSession.id])
+      
       return Object.assign({}, state, tempState)
     }
     // UnreadInfo：更新群未读数
@@ -478,157 +480,157 @@ let indexReducer = (state = INITIAL_STATE, action) => {
     //   return Object.assign({}, state, tempState)
     // }
     // 设置当前群/成员
-    case 'Set_Current_Group_And_Members': {
-      let tempState = Object.assign({}, state)
-      tempState.currentGroup = tempState.groupList[action.payload] || {}
-      tempState.currentGroupMembers = tempState.groupMemberList[action.payload] || []
-      return Object.assign({}, state, tempState)
-    }
+    // case 'Set_Current_Group_And_Members': {
+    //   let tempState = Object.assign({}, state)
+    //   tempState.currentGroup = tempState.groupList[action.payload] || {}
+    //   tempState.currentGroupMembers = tempState.groupMemberList[action.payload] || []
+    //   return Object.assign({}, state, tempState)
+    // }
     // 初始化群组 ， onTeam 回调的所有群
-    case 'Init_Groups': {
-      let tempState = Object.assign({}, state)
-      let teams = action.payload
-      let groupList = {}
-      Object.keys(teams).map(item => { // 初始化 list、构造群 map
-        if (item === 'invalid') {
-          return
-        }
-        let teamId = teams[item].teamId
-        teams[item].isCurrentNotIn = false
-        groupList[teamId] = teams[item]
-      })
-      tempState.groupList = groupList
-      return Object.assign({}, state, tempState)
-    }
+    // case 'Init_Groups': {
+    //   let tempState = Object.assign({}, state)
+    //   let teams = action.payload
+    //   let groupList = {}
+    //   Object.keys(teams).map(item => { // 初始化 list、构造群 map
+    //     if (item === 'invalid') {
+    //       return
+    //     }
+    //     let teamId = teams[item].teamId
+    //     teams[item].isCurrentNotIn = false
+    //     groupList[teamId] = teams[item]
+    //   })
+    //   tempState.groupList = groupList
+    //   return Object.assign({}, state, tempState)
+    // }
     // 添加群
-    case 'Add_Group': {
-      let tempState = Object.assign({}, state)
-      let team = action.payload
-      if (!team.hasOwnProperty('isCurrentNotIn')) {
-        team.isCurrentNotIn = false
-      }
-      tempState.groupList[team.teamId] = team
-      return Object.assign({}, state, tempState)
-    }
-    // 更新群
-    case 'Update_Group': {
-      let tempState = Object.assign({}, state)
-      let group = action.payload
-      dealGroupMsg.onUpdateTeam(group, null, tempState, false)
-      return Object.assign({}, state, tempState)
-    }
+    // case 'Add_Group': {
+    //   let tempState = Object.assign({}, state)
+    //   let team = action.payload
+    //   if (!team.hasOwnProperty('isCurrentNotIn')) {
+    //     team.isCurrentNotIn = false
+    //   }
+    //   tempState.groupList[team.teamId] = team
+    //   return Object.assign({}, state, tempState)
+    // }
+    // // 更新群
+    // case 'Update_Group': {
+    //   let tempState = Object.assign({}, state)
+    //   let group = action.payload
+    //   dealGroupMsg.onUpdateTeam(group, null, tempState, false)
+    //   return Object.assign({}, state, tempState)
+    // }
     // 更新当前群和成员列表
-    case 'Update_Group_And_Set_Current': {
-      let tempState = Object.assign({}, state)
-      let group = action.payload
-      dealGroupMsg.onUpdateTeamAndCurrent(group, null, tempState, true)
-      return Object.assign({}, state, tempState)
-    }
-    // 退出、删除群组；并且将存在的对应会话丢弃
-    case 'Del_Group': {
-      let tempState = Object.assign({}, state)
-      let group = action.payload
-      let sessionId = 'team-' + group.teamId
-      // 更新群信息
-      tempState.groupList[group.teamId] = Object.assign({}, tempState.groupList[group.teamId], { isCurrentNotIn: true })
-      // 更新当前群信息
-      if (tempState.currentGroup.teamId === group.teamId) {
-        tempState.currentGroup = tempState.groupList[group.teamId]
-      }
-      // 删除会话
-      if (tempState.rawMessageList[sessionId]) {
-        delete tempState.rawMessageList[sessionId]
-        tempState.rawMessageList = Object.assign({}, tempState.rawMessageList)
-      }
-      return Object.assign({}, state, tempState)
-    }
+    // case 'Update_Group_And_Set_Current': {
+    //   let tempState = Object.assign({}, state)
+    //   let group = action.payload
+    //   dealGroupMsg.onUpdateTeamAndCurrent(group, null, tempState, true)
+    //   return Object.assign({}, state, tempState)
+    // }
+    // // 退出、删除群组；并且将存在的对应会话丢弃
+    // case 'Del_Group': {
+    //   let tempState = Object.assign({}, state)
+    //   let group = action.payload
+    //   let sessionId = 'team-' + group.teamId
+    //   // 更新群信息
+    //   tempState.groupList[group.teamId] = Object.assign({}, tempState.groupList[group.teamId], { isCurrentNotIn: true })
+    //   // 更新当前群信息
+    //   if (tempState.currentGroup.teamId === group.teamId) {
+    //     tempState.currentGroup = tempState.groupList[group.teamId]
+    //   }
+    //   // 删除会话
+    //   if (tempState.rawMessageList[sessionId]) {
+    //     delete tempState.rawMessageList[sessionId]
+    //     tempState.rawMessageList = Object.assign({}, tempState.rawMessageList)
+    //   }
+    //   return Object.assign({}, state, tempState)
+    // }
     // 获取了某群组的所有成员、更新 groupList groupMemberList groupMemberMap currentGroup currentGroupMembers ；检验了当前用户是否在对应的群里，更新群 isCurrentNotIn 标志;
-    case 'Get_Group_Members_And_Set_Current': {
-      let tempState = Object.assign({}, state)
-      let obj = action.payload
-      console.log('取得了所有成员：' + obj.teamId, obj)
-      dealGroupMsg.onAddTeamMembers(obj, null, tempState)
-      return Object.assign({}, state, tempState)
-    }
+    // case 'Get_Group_Members_And_Set_Current': {
+    //   let tempState = Object.assign({}, state)
+    //   let obj = action.payload
+    //   console.log('取得了所有成员：' + obj.teamId, obj)
+    //   dealGroupMsg.onAddTeamMembers(obj, null, tempState)
+    //   return Object.assign({}, state, tempState)
+    // }
     // 添加群成员
-    case 'Add_Group_Members': {
-      let tempState = Object.assign({}, state)
-      let obj = action.payload
-      dealGroupMsg.onAddTeamMembers(obj, null, tempState)
-      return Object.assign({}, state, tempState)
-    }
+    // case 'Add_Group_Members': {
+    //   let tempState = Object.assign({}, state)
+    //   let obj = action.payload
+    //   dealGroupMsg.onAddTeamMembers(obj, null, tempState)
+    //   return Object.assign({}, state, tempState)
+    // }
     // 更新群成员/或者自己的群信息
-    case 'Update_Group_Member': {
-      let tempState = Object.assign({}, state)
-      let teamMember = action.payload
-      if (!tempState.groupMemberList[teamMember.teamId]) {
-        return Object.assign({}, state, tempState)
-      }
-      if (!tempState.groupMemberMap[teamMember.teamId]) {
-        tempState.groupMemberMap[teamMember.teamId] = {}
-      }
-      let list = tempState.groupMemberList[teamMember.teamId].slice()
-      let listMap = tempState.groupMemberMap[teamMember.teamId]
-      for (let i = 0, length = list.length; i < length; i++) {
-        if (list[i].account === teamMember.account) {
-          let newMember = Object.assign({}, list[i], teamMember)
-          list.splice(i, 1, newMember)
-          tempState.groupMemberList[teamMember.teamId] = list
-          listMap[list[i].account] = newMember
-          tempState.groupMemberMap = Object.assign({}, tempState.groupMemberMap)
-          if (teamMember.teamId === tempState.currentGroup.teamId) { // 需要更新当前群
-            tempState.currentGroupMembers = list // 更新成员列表
-          }
-          return Object.assign({}, state, tempState)
-        }
-      }
-      return Object.assign({}, state, tempState)
-    }
+    // case 'Update_Group_Member': {
+    //   let tempState = Object.assign({}, state)
+    //   let teamMember = action.payload
+    //   if (!tempState.groupMemberList[teamMember.teamId]) {
+    //     return Object.assign({}, state, tempState)
+    //   }
+    //   if (!tempState.groupMemberMap[teamMember.teamId]) {
+    //     tempState.groupMemberMap[teamMember.teamId] = {}
+    //   }
+    //   let list = tempState.groupMemberList[teamMember.teamId].slice()
+    //   let listMap = tempState.groupMemberMap[teamMember.teamId]
+    //   for (let i = 0, length = list.length; i < length; i++) {
+    //     if (list[i].account === teamMember.account) {
+    //       let newMember = Object.assign({}, list[i], teamMember)
+    //       list.splice(i, 1, newMember)
+    //       tempState.groupMemberList[teamMember.teamId] = list
+    //       listMap[list[i].account] = newMember
+    //       tempState.groupMemberMap = Object.assign({}, tempState.groupMemberMap)
+    //       if (teamMember.teamId === tempState.currentGroup.teamId) { // 需要更新当前群
+    //         tempState.currentGroupMembers = list // 更新成员列表
+    //       }
+    //       return Object.assign({}, state, tempState)
+    //     }
+    //   }
+    //   return Object.assign({}, state, tempState)
+    // }
     // 删除群成员
-    case 'Del_Group_Member': {
-      let tempState = Object.assign({}, state)
-      let obj = action.payload
-      dealGroupMsg.onRemoveTeamMembers(obj, null, tempState)
-      return Object.assign({}, state, tempState)
-    }
+    // case 'Del_Group_Member': {
+    //   let tempState = Object.assign({}, state)
+    //   let obj = action.payload
+    //   dealGroupMsg.onRemoveTeamMembers(obj, null, tempState)
+    //   return Object.assign({}, state, tempState)
+    // }
     // 更新群管理员
-    case 'Update_Group_Member_Manager': {
-      let tempState = Object.assign({}, state)
-      let { team, accounts, members } = action.payload
-      let teamId = team.teamId
-      if (!tempState.groupMemberList[teamId]) {
-        return Object.assign({}, state, tempState)
-      }
-      let list = tempState.groupMemberList[teamId].slice()
-      for (let i = 0, length = list.length; i < length; i++) {
-        let index = accounts.indexOf(list[i].account)
-        if (index !== -1) {
-          Object.assign(list[i], members[index]) // 更新被更新成员的信息 groupMemberMap 会同时改变
-        }
-      }
-      tempState.groupMemberList[teamId] = list
-      if (tempState.currentGroup.teamId === teamId) {
-        tempState.currentGroupMembers = list
-      }
-      return Object.assign({}, state, tempState)
-    }
-    // 更新群主
-    case 'Update_Group_Owner': {
-      let tempState = Object.assign({}, state)
-      let { team } = action.payload
-      dealGroupMsg.onUpdateTeam(team, null, tempState, false)
-      return Object.assign({}, state, tempState)
-    }
+    // case 'Update_Group_Member_Manager': {
+    //   let tempState = Object.assign({}, state)
+    //   let { team, accounts, members } = action.payload
+    //   let teamId = team.teamId
+    //   if (!tempState.groupMemberList[teamId]) {
+    //     return Object.assign({}, state, tempState)
+    //   }
+    //   let list = tempState.groupMemberList[teamId].slice()
+    //   for (let i = 0, length = list.length; i < length; i++) {
+    //     let index = accounts.indexOf(list[i].account)
+    //     if (index !== -1) {
+    //       Object.assign(list[i], members[index]) // 更新被更新成员的信息 groupMemberMap 会同时改变
+    //     }
+    //   }
+    //   tempState.groupMemberList[teamId] = list
+    //   if (tempState.currentGroup.teamId === teamId) {
+    //     tempState.currentGroupMembers = list
+    //   }
+    //   return Object.assign({}, state, tempState)
+    // }
+    // // 更新群主
+    // case 'Update_Group_Owner': {
+    //   let tempState = Object.assign({}, state)
+    //   let { team } = action.payload
+    //   dealGroupMsg.onUpdateTeam(team, null, tempState, false)
+    //   return Object.assign({}, state, tempState)
+    // }
     // 获取到用户资料
-    case 'Add_Person': {
-      let tempState = Object.assign({}, state)
-      let users = action.payload
-      users.map(item => {
-        tempState.personList[item.account] = Object.assign({}, tempState.personList[item.account], item)
-      })
-      tempState.personList = Object.assign({}, tempState.personList)
-      return Object.assign({}, state, tempState)
-    }
+    // case 'Add_Person': {
+    //   let tempState = Object.assign({}, state)
+    //   let users = action.payload
+    //   users.map(item => {
+    //     tempState.personList[item.account] = Object.assign({}, tempState.personList[item.account], item)
+    //   })
+    //   tempState.personList = Object.assign({}, tempState.personList)
+    //   return Object.assign({}, state, tempState)
+    // }
     // 多人通话呼叫列表
     // case 'Netcall_Call_UserList': {
     //   let tempState = Object.assign({}, state)

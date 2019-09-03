@@ -1,2 +1,7 @@
 <!--pages/index/index.wxml-->
 <text>pages/index/index.wxml</text>
+
+<view bindtap="duankai">断开IM连接</view>
+<view bindtap="chonglian">重连IM连接</view>
+
+<view bindtap="changeAccount">换账号重连IM连接</view>

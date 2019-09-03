@@ -1,6 +1,6 @@
 import PAGE_CONFIG from '../config/pageConfig.js'
 import emojimap from './emojimap.js'
-import { getPinyin } from './pinyin.js'
+// import { getPinyin } from './pinyin.js'
 const app = getApp()
 var emoji = emojimap.emojiList.emoji
 
@@ -398,12 +398,12 @@ function generateRichTextNode(text) {
    * 输出贴图表情对象，用于生成富文本图片节点
    * content:"{"type":3,"data":{"catalog":"ajmd","chartlet":"ajmd010"}}"
    */
-function generateBigEmojiImageFile(content) {
-  let prefix = 'http://yx-web.nosdn.127.net/webdoc/h5/emoji/'
-  let file = { w: 100, h: 100, url: '' }
-  file.url = `${prefix}${content.data.catalog}/${content.data.chartlet}.png`
-  return file
-}
+// function generateBigEmojiImageFile(content) {
+//   let prefix = 'http://yx-web.nosdn.127.net/webdoc/h5/emoji/'
+//   let file = { w: 100, h: 100, url: '' }
+//   file.url = `${prefix}${content.data.catalog}/${content.data.chartlet}.png`
+//   return file
+// }
 /**
  * 处理图片富文本节点
  */
@@ -441,11 +441,11 @@ function clickLogoJumpToCard(friendsCard, account, isPush) {
   if (friendsAccountArr.indexOf(account) !== -1) {
     if (isPush === true) {
       wx.navigateTo({
-        url: '/partials/personcard/personcard?account=' + account,
+        url: '/pages/personcard/personcard?account=' + account,
       })
     } else {
       wx.redirectTo({
-        url: '/partials/personcard/personcard?account=' + account,
+        url: '/pages/personcard/personcard?account=' + account,
       })
     }
 
@@ -476,65 +476,66 @@ function clickLogoJumpToCard(friendsCard, account, isPush) {
  * friendCard: 好友列表（含名片信息）
  * 获得 friendCata 、 cataHeader
  */
-function getFormatFriendList(friendCard, defaultUserLogo, excludeList) {
-  excludeList = excludeList || []
-  let friendCardMap = friendCard // key为account，value为该人信息
-  let accountArr = Object.keys(friendCardMap) // accounts数组
-  let accountMapNick = {} // 存储account映射nickPinyin，方便依据account查找friendCata
-  let orderedFriendsCard = [] // 渲染列表常用数据，[{nick: 'test', account: 'nihwo', avatar: 'path', isBlack}]
-  // 循环遍历
-  accountArr.map(account => {
-    if (excludeList.indexOf(account) !== -1) {
-      return
-    }
-    let card = friendCardMap[account]
-    // 没有account说明是非好友情况下拉黑
-    if (!card.account || card.isFriend == false) {
-      return
-    }
+// function getFormatFriendList(friendCard, defaultUserLogo, excludeList) {
+//   excludeList = excludeList || []
+//   let friendCardMap = friendCard // key为account，value为该人信息
+//   let accountArr = Object.keys(friendCardMap) // accounts数组
+//   let accountMapNick = {} // 存储account映射nickPinyin，方便依据account查找friendCata
+//   let orderedFriendsCard = [] // 渲染列表常用数据，[{nick: 'test', account: 'nihwo', avatar: 'path', isBlack}]
+//   // 循环遍历
+//   accountArr.map(account => {
+//     if (excludeList.indexOf(account) !== -1) {
+//       return
+//     }
+//     let card = friendCardMap[account]
+//     console.log('avatar111111',card)
+//     // 没有account说明是非好友情况下拉黑
+//     if (!card.account || card.isFriend == false) {
+//       return
+//     }
 
-    let nickPinyin = getPinyin(card.nick, '').toUpperCase()
-    let renderCard = {
-      'avatar': card.avatar || defaultUserLogo,
-      'account': card.account,
-      'nick': card.nick,
-      'nickPinyin': nickPinyin,
-      'status': card.status,
-      'isBlack': card.isBlack || false
-    }
-    // 存储account映射nickPinyin，方便依据account查找friendCata
-    accountMapNick[card.account] = nickPinyin
-    //刷新视图对象
-    orderedFriendsCard.push(renderCard)
-  })
+//     let nickPinyin = getPinyin(card.nick, '').toUpperCase()
+//     let renderCard = {
+//       'avatar': card.avatar || defaultUserLogo,
+//       'account': card.account,
+//       'nick': card.nick,
+//       'nickPinyin': nickPinyin,
+//       'status': card.status,
+//       'isBlack': card.isBlack || false
+//     }
+//     // 存储account映射nickPinyin，方便依据account查找friendCata
+//     accountMapNick[card.account] = nickPinyin
+//     //刷新视图对象
+//     orderedFriendsCard.push(renderCard)
+//   })
 
-  // 排序
-  let newOrder = orderedFriendsCard.sort((a, b) => {
-    return a.nickPinyin.localeCompare(b.nickPinyin)
-  })
-  // 数据分类
-  let result = {}
-  newOrder.map((item, index) => {
-    let firstLetter = item.nickPinyin[0]
-    if (!firstLetter || !/^[A-Za-z]*$/.test(firstLetter)) { // 非字母
-      firstLetter = '#'
-    }
-    if (!result[firstLetter]) {
-      result[firstLetter] = []
-    }
-    result[firstLetter].push(item)
-  })
+//   // 排序
+//   let newOrder = orderedFriendsCard.sort((a, b) => {
+//     return a.nickPinyin.localeCompare(b.nickPinyin)
+//   })
+//   // 数据分类
+//   let result = {}
+//   newOrder.map((item, index) => {
+//     let firstLetter = item.nickPinyin[0]
+//     if (!firstLetter || !/^[A-Za-z]*$/.test(firstLetter)) { // 非字母
+//       firstLetter = '#'
+//     }
+//     if (!result[firstLetter]) {
+//       result[firstLetter] = []
+//     }
+//     result[firstLetter].push(item)
+//   })
 
-  // 将#类放置最后
-  let tempKeys = Object.keys(result)
-  if (tempKeys[0] == '#') {
-    tempKeys.push(tempKeys.shift())
-  }
-  return {
-    friendCata: result,
-    cataHeader: tempKeys
-  }
-}
+//   // 将#类放置最后
+//   let tempKeys = Object.keys(result)
+//   if (tempKeys[0] == '#') {
+//     tempKeys.push(tempKeys.shift())
+//   }
+//   return {
+//     friendCata: result,
+//     cataHeader: tempKeys
+//   }
+// }
 /**
  * 计算多人情况下推拉流组件位置以及宽高
  */
@@ -933,8 +934,8 @@ module.exports = {
   clickLogoJumpToCard,
   generateRichTextNode,
   // generateFingerGuessImageFile,
-  generateBigEmojiImageFile,
+  // generateBigEmojiImageFile,
   generateImageNode,
-  getFormatFriendList,
+  // getFormatFriendList,
   dealMsg
 }

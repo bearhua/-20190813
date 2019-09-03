@@ -19,6 +19,8 @@ export default class IMController {
       account: headers.account,
       token: '016e7e473499d30ea2536a89fade8fa5',
       account: 'tf_1679',
+      // token: '39230932f4690a00efa568a1a07fae6e',
+      // account: 'tf_3274209',
       promise: true,
       transports: ['websocket'],
       syncSessionUnread: true, // 同步未读数
@@ -44,7 +46,6 @@ export default class IMController {
       onusers: this.onUsers,//没有这行会显示列表昵称们显示不出来
       // onupdateuser: this.onUpdateUser,
       // 机器人列表的回调
-
       // onrobots: this.onRobots,
       // 群组
       // onteams: this.onTeams,
@@ -208,11 +209,14 @@ export default class IMController {
  * {id:'team-1389946935',lastMsg:{attach:{accounts,team},type,users},scene,to,from,type,unread,updateTime}
  */
   onUpdateSession(session) {
-    console.log('onUpdateSession: ', session)
-    store.dispatch({
-      type: 'UnreadInfo_update',
-      payload: session
-    })
+    console.log('onUpdateSession: ', session, app.globalData.nim.isMsgRemoteRead(session.lastMsg))
+    try {
+      store.dispatch({
+        type: 'UnreadInfo_update',
+        payload: session
+      })
+    } catch (error) {
+    }
   }
   /**
    * 收到消息
@@ -226,7 +230,7 @@ export default class IMController {
         payload: { msg, nim: app.globalData.nim }
       })
     } catch (error) {
-      
+
     }
   }
   /** 操作主体为对方
@@ -486,7 +490,7 @@ export default class IMController {
    * [ {id:"p2p-liuxuanlin",lastMsg:{from:'wujie',text:'222',to:"liuxuanlin"}} ]
    */
   onSessions(sessions) {
-    console.log('onSessions: ', sessions)
+    console.log(orderCounter++,'onSessions: ', sessions)
     
     store.dispatch({
       type: 'SessionUnreadInfo_update',

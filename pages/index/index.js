@@ -1,5 +1,6 @@
 // pages/index/index.js
-
+let app = getApp()
+let store = app.store
 Page({
 
   /**
@@ -50,7 +51,7 @@ Page({
   onPullDownRefresh: function () {
 
   },
-
+  
   /**
    * 页面上拉触底事件的处理函数
    */
@@ -63,5 +64,36 @@ Page({
    */
   onShareAppMessage: function () {
 
+  },
+  duankai (){
+    // 断开 IM
+    app.globalData.nim.disconnect();
+    app.setTotalUnread(0)
+    store.dispatch({
+      type: 'Reset_All_State'
+    })
+    // 更新 token
+    // app.global.nim.setOptions({
+    //   token: 'newToken'
+    // });
+    // // 重新连接
+    // nim.connect();
+  },
+  chonglian(){
+    app.globalData.nim.connect();
+   
+    // 更新 token
+    // app.global.nim.setOptions({
+    //   token: 'newToken'
+    // });
+    // // 重新连接
+    // nim.connect();
+  },
+  changeAccount(){
+    app.globalData.nim.setOptions({
+      token: '016e7e473499d30ea2536a89fade8fa5'
+    });
+    // 重新连接
+    app.globalData.nim.connect();
   }
 })

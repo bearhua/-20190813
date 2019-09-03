@@ -28,13 +28,13 @@
               <text wx:if="{{message.account != userInfo.account}}" class='recentchat-item-title'>{{message.nick || message.account}}</text>
               <!-- <text wx:if="{{message.account == userInfo.account}}" class='recentchat-item-title'>我的电脑</text> -->
               <!--house365加 身份信息-->
-              <text class="recentchat-item-identity">经纪人</text>
+              <text class="recentchat-item-identity">{{message.identity}}</text>
             </view>
             <text class='recentchat-item-time'>{{message.displayTime}}</text>
           </view>
           <view class='recentchat-item-bottom'>
             <view style='display:flex;align-items:center;'>
-              <text wx:if="{{message.account != userInfo.account && message.status}}" class='recentchat-item-status'>[{{message.status}}]</text>
+              <!-- <text wx:if="{{message.account != userInfo.account && message.status}}" class='recentchat-item-status'>[{{message.status}}]</text> -->
               <text class='recentchat-item-desc'>{{message.lastestMsg}}</text>
             </view>
           </view>

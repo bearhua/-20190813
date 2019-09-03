@@ -313,12 +313,14 @@
 
 
 .self .record-chatting-item-text,
-.self .audio-wrapper{
+.self .audio-wrapper,
+.self .tfim-winchart-content{
   margin-right: 20rpx;
   margin-left: 0;
 }
 .other .record-chatting-item-text,
-.other .audio-wrapper{
+.other .audio-wrapper,
+.other .tfim-winchart-content{
   margin-left: 20rpx;
   margin-right: 0;
 }
@@ -366,10 +368,11 @@ button::after{
 
 .tfim-winchart-content {
   position: relative;
-  /* padding: 10rpx; */
-  border-radius: 5rpx;
-  -webkit-border-radius: 5rpx;
-  -moz-border-radius: 5rpx;
+  padding: 16rpx 12rpx;
+  border: 1rpx solid #d9d9d9;
+  border-radius: 8rpx;
+  -webkit-border-radius: 8rpx;
+  -moz-border-radius: 8rpx;
   box-sizing: border-box;
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
@@ -393,7 +396,7 @@ button::after{
   height: 133rpx;
   float: left;
 }
-.tfim-winchart-content-card-l img {
+.tfim-winchart-content-card-l image {
   width: 100%;
   height: 100%;
 }

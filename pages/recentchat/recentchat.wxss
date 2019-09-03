@@ -82,7 +82,7 @@
   line-height:44rpx;
 }
 .recentchat-item-bottom .recentchat-item-desc {
-  max-width: 400rpx;
+  max-width: 574rpx;
   overflow: hidden;
   display: inline-block;
   white-space: nowrap;
@@ -113,7 +113,7 @@
   color: #b1b1b1;
 }
 /* 删除按钮样式 */
-.swipedelete-btn {
+/* .swipedelete-btn {
   position:absolute;
   top:0;
   right:-160rpx;
@@ -125,7 +125,7 @@
   display:flex;
   justify-content:center;
   align-items:center;
-}
+} */
 
 .flex{
   display: flex;

@@ -207,3 +207,82 @@
 .other .audio-wrapper{
   margin-left: 20rpx;
 }
+
+
+/*自定义卡片样式*/
+.tfimline1 {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.tfim_line2 {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.tfim-winchart-content {
+  position: relative;
+  padding: 16rpx 12rpx;
+  border: 1rpx solid #d9d9d9;
+  border-radius: 8rpx;
+  -webkit-border-radius: 8rpx;
+  -moz-border-radius: 8rpx;
+  box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  word-break: break-all;
+  word-wrap: break-word;
+  background-color: #fff;
+  font-size: 14rpx;
+  color: #212121;
+  max-width: 750px;
+}
+.tfim-winchart-content-text {
+  max-width: 230rpx;
+  min-height: 24rpx;
+  line-height: 24rpx;
+  white-space: normal;
+  word-break: break-all;
+}
+
+.tfim-winchart-content-card-l {
+  width: 179rpx;
+  height: 133rpx;
+  float: left;
+}
+.tfim-winchart-content-card-l image {
+  width: 100%;
+  height: 100%;
+}
+.tfim-winchart-content-card-r {
+  width: 320rpx;
+  float: left;
+  margin-left: 25rpx;
+}
+.tfim-winchart-content-card-title {
+  font-size: 26rpx;
+  color: #212121;
+  line-height: 34rpx;
+  max-height: 68rpx;
+  overflow: hidden;
+}
+.tfim-winchart-content-card-place {
+  font-size: 22rpx;
+  color: #8a8a8a;
+  height: 24rpx;
+  line-height: 24rpx;
+  margin-top: 4rpx;
+}
+.tfim-winchart-content-card-price {
+  font-size: 22rpx;
+  color: #ff7500;
+  margin-top: 4rpx;
+}
+.tfim-winchart-content-card-price span{
+	font-size: 30rpx;
+	color: #ff7500;
+}
+

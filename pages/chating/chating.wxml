@@ -26,13 +26,22 @@
   </view> -->
   <!-- 消息记录 -->
    <view class='record-wrapper' id="recordWrapper">
+    <!--365卡片消息 newhouse(新房)-- channelName/dist secondhouse(二手房)--apartment/buildarea-->
+    <wxs module="tools" >
+      var bretuendata = function (mes) {
+        return JSON.parse(mes);
+      }
+      module.exports = {
+        bretuendata: bretuendata,
+      };
+    </wxs>
     <view wx:for="{{messageArr}}" wx:for-item="message" wx:key="{{message.time}}">
       <view class='record-item-time-wrapper' wx:if="{{message.displayTimeHeader != ''}}">
         <text class='record-item-time'>{{message.displayTimeHeader}}</text>
       </view>
       <!--send 发送的消息-->
       <view wx:if="{{message.sendOrReceive == 'send'}}" class='{{message.sendOrReceive == "send" ? "record-chatting-item self" : ""}}' style='justify-content: {{message.type === "tip" || message.type === "notification" ? "center" : "flex-end"}}' data-message="{{message}}" bindlongpress='showEditorMenu'>
-        <view class="record-chatting-item-unread">已读 </view>
+        <view wx:if="{{message.isReaded}}" class="record-chatting-item-unread">已读 </view>
         <view wx:if="{{message.type === 'geo'}}" data-geo='{{message.geo}}' class='small-map-wrapper' catchtap='fullScreenMap'>
           <image src="../../images/map.png" class='small-geo-img'></image>
           <text class='text'>{{message.geo.title}}</text>
@@ -46,17 +55,31 @@
           <image src='{{iconBase64Map.iconVoiceWhite}}' class='image'></image>
         </view>
         <rich-text wx:if="{{message.type === 'image'}}" class='record-chatting-item-text nobg' nodes="{{message.nodes}}" ></rich-text>
-        <rich-text wx:if="{{message.type === '猜拳' || message.type === '贴图表情'}}" class='record-chatting-item-text nobg' nodes="{{message.nodes}}" ></rich-text>
-        <rich-text wx:if="{{message.type === 'text' || message.type === 'file' || message.type === '白板消息' || message.type === '阅后即焚' || message.type === 'robot'}}" class='record-chatting-item-text' nodes="{{message.nodes}}"></rich-text>        
+    
+        <rich-text wx:if="{{message.type === 'text' || message.type === 'file'}}" class='record-chatting-item-text' nodes="{{message.nodes}}"></rich-text>        
         <rich-text wx:if="{{message.type === 'tip' || message.type === 'notification'}}" class='tip-rich-text' nodes="{{message.nodes}}"></rich-text>
-        <!-- <text wx:if="{{message.type !== 'tip' && message.type !== 'notification' && message.type !== 'image' && message.type !== 'video' && message.type !== 'geo' && message.type !== '猜拳' && message.type !== '贴图表情' }}" class='right-triangle'></text> -->
-        <image wx:if="{{message.type !== 'tip' && message.type !== 'notification'}}" src='{{loginAccountLogo}}' catchtap='switchToMyTab' class='record-chatting-item-img'></image>
+        <block wx:if="{{message.type =='custom'}}">
+          <view class="tfim-winchart-content tfim-winchart-content-custom" 
+          wx:if="{{message.type === 'custom' && tools.bretuendata(message.content).type === 8  && (tools.bretuendata(message.content).data.type === 'newhouse' || tools.bretuendata(message.content).data.type === 'secondhouse')}}" catchtap="switchToDetail" data-url="">
+            <view class="tfim-winchart-content-card-l"> 
+              <image src="{{tools.bretuendata(message.content).data.coverPic}}"></image>
+            </view>
+            <view class="tfim-winchart-content-card-r">
+              <view class="tfim-winchart-content-card-title tfim_line2">{{tools.bretuendata(message.content).data.houseTitle}}</view>
+              <view class="tfim-winchart-content-card-place tfimline1">{{tools.bretuendata(message.content).data.channelName || tools.bretuendata(message.content).data.apartment}} {{tools.bretuendata(message.content).data.dist || tools.bretuendata(message.content).data.buildarea}}</view> 
+              <view class="tfim-winchart-content-card-price tfimline1">
+                {{tools.bretuendata(message.content).data.price}}
+              </view> 
+            </view> 
+          </view>
+          <rich-text wx:else class='record-chatting-item-text' style='color:#212121  ;background-color:#fff;border:1rpx solid #d9d9d9'  nodes="{{message.nodes}}"  ></rich-text>
+        </block>
+        <image wx:if="{{message.type !== 'tip' && message.type !== 'notification'}}" src='{{loginAccountLogo}}' class='record-chatting-item-img'></image>
         
       </view>
       <!--receive 收到的消息-->
       <view wx:if="{{message.sendOrReceive == 'receive'}}" class='{{message.sendOrReceive == "receive" ? "record-chatting-item other" : ""}}' style='justify-content: {{message.type === "tip" || message.type === "notification" ? "center" : "flex-start"}}' data-message="{{message}}"  bindlongpress='showEditorMenu'>
-        <image wx:if="{{message.type !== 'tip' && message.type !== 'notification'}}" catchtap='switchPersonCard' data-account='{{message.from}}' src='{{personList[message.from] && personList[message.from].avatar || defaultUserLogo}}' class='record-chatting-item-img'></image>
-        <!-- <text wx:if="{{message.type !== 'tip' && message.type !== 'notification' && message.type !== 'image' && message.type !== 'video' && message.type !== 'geo' && message.type !== '猜拳' && message.type !== '贴图表情' }}" class='left-triangle'></text> -->
+        <image wx:if="{{message.type !== 'tip' && message.type !== 'notification'}}" data-account='{{message.from}}' src='{{personList[message.from] && personList[message.from].avatar || defaultUserLogo}}' class='record-chatting-item-img'></image>
         <view wx:if="{{message.type === 'geo'}}" data-geo='{{message.geo}}' class='small-map-wrapper' catchtap='fullScreenMap'>
           <image src="../../images/map.png" class='small-geo-img'></image>
           <text class='text'>{{message.geo.title}}</text>
@@ -70,11 +93,26 @@
           <image src='{{iconBase64Map.iconVoiceGrey}}' class='image'></image>
         </view>
         <rich-text wx:if="{{message.type === 'image'}}" class='record-chatting-item-text nobg' nodes="{{message.nodes}}"></rich-text>
-        <rich-text wx:if="{{message.type === '猜拳' || message.type === '贴图表情'}}" class='record-chatting-item-text nobg' nodes="{{message.nodes}}"></rich-text>
-        <!-- <rich-text wx:if="{{message.type === 'text' || message.type === 'file' || message.type === '白板消息' || message.type === '阅后即焚' || message.type === 'robot'|| message.type === 'custom'}}" class='record-chatting-item-text' style='color:#212121  ;background-color:#fff;border:1rpx solid #d9d9d9'  nodes="{{message.nodes}}"></rich-text> -->
-         <rich-text wx:if="{{message.type === 'text' || message.type === 'file' || message.type === '白板消息' || message.type === '阅后即焚' || message.type === 'robot'|| message.type === 'custom'}}" class='record-chatting-item-text' style='color:#212121  ;background-color:#fff;border:1rpx solid #d9d9d9'  nodes="{{message.nodes}}"></rich-text>
-         
+        <rich-text wx:if="{{message.type === 'text' || message.type === 'file'}}" class='record-chatting-item-text' style='color:#212121;background-color:#fff;border:1rpx solid #d9d9d9'  nodes="{{message.nodes}}"  catchtap='switchToMyTab' ></rich-text>
         <rich-text wx:if="{{message.type === 'tip' || message.type === 'notification'}}" class='tip-rich-text' nodes="{{message.nodes}}"></rich-text>
+        
+        <!--365卡片消息-->
+        <block wx:if="{{message.type =='custom'}}">
+          <view class="tfim-winchart-content tfim-winchart-content-custom" 
+          wx:if="{{message.type === 'custom' && tools.bretuendata(message.content).type === 8  && (tools.bretuendata(message.content).data.type === 'newhouse' || tools.bretuendata(message.content).data.type === 'secondhouse')}}" catchtap="switchToDetail" data-url="">
+            <view class="tfim-winchart-content-card-l"> 
+              <image src="{{tools.bretuendata(message.content).data.coverPic}}"></image>
+            </view>
+            <view class="tfim-winchart-content-card-r">
+              <view class="tfim-winchart-content-card-title tfim_line2">{{tools.bretuendata(message.content).data.houseTitle}}</view>
+              <view class="tfim-winchart-content-card-place tfimline1">{{tools.bretuendata(message.content).data.channelName || tools.bretuendata(message.content).data.apartment}} {{tools.bretuendata(message.content).data.dist || tools.bretuendata(message.content).data.buildarea}}</view> 
+              <view class="tfim-winchart-content-card-price tfimline1">
+                {{tools.bretuendata(message.content).data.price}}
+              </view> 
+            </view> 
+          </view>
+          <rich-text wx:else class='record-chatting-item-text' style='color:#212121  ;background-color:#fff;border:1rpx solid #d9d9d9'  nodes="{{message.nodes}}"  ></rich-text>
+        </block>
       </view>
     </view>
    </view>
@@ -82,18 +120,19 @@
   <view wx:if="{{chatType === 'p2p' || !currentGroup.isCurrentNotIn}}" class='chatinput-wrapper' style='margin-bottom: {{focusFlag ? 20 : 0}}rpx;' catchtap='stopEventPropagation'>
     <view class='chatinput-content'>
       <image src='{{sendType == 0 ? "../../images/voice.png" : "../../images/keyboard.png"}}' class='chatinput-img' catchtap='switchSendType'></image>
-      <input style='margin-bottom: 20rpx;' wx:if="{{sendType == 0}}" value='{{inputValue}}' focus='{{focusFlag}}' bindinput='inputChange' bindfocus='inputFocus' bindblur='inputBlur' bindconfirm='inputSend' class='chatinput-input {{!btnFlag?"w500": "w430"}}'  placeholder="想和TA说些什么呢？" confirm-type='send'></input>
+      <input style='margin-bottom: 20rpx;' wx:if="{{sendType == 0}}" value='{{inputValue}}' focus='{{focusFlag}}' bindinput='inputChange' bindfocus='inputFocus' bindblur='inputBlur' bindconfirm='inputSend' class='chatinput-input {{!inputValue?"w500": "w430"}}'  placeholder="想和TA说些什么呢？" confirm-type='send'></input>
       <!-- <button wx:if="{{sendType == 1}}" class="{{ isLongPress ? 'chatinput-voice-mask chatinput-voice-mask-hover' : 'chatinput-voice-mask' }}" hover-class="none" catchtouchstart='longPressStart' catchlongpress='voiceBtnLongTap' catchtouchend='longPressEnd'>按住说话</button> -->
       <button wx:if="{{sendType == 1}}" class="{{ isLongPress ? 'chatinput-voice-mask chatinput-voice-mask-hover' : 'chatinput-voice-mask' }}" hover-class="none" catchtouchstart='longPressStart' catchtouchend='longPressEnd'>
         {{isLongPress ? '松开结束' : '按住说话'}}
       </button>
-      <image wx:if="{{!btnFlag}}" src='../../images/more.png' catchtap='toggleMore' class='chatinput-img fr'></image>
-      <button wx:if="{{btnFlag}}" class="chatinput-sendbtn fr" catchtap="sendMsg">发送</button>
+      <button wx:if="{{inputValue && sendType == 0}}" class="chatinput-sendbtn fr" catchtap="sendMsg" >发送</button>
+      <image wx:else src='../../images/more.png' catchtap='toggleMore' class='chatinput-img fr'></image>
+      
       <!-- <image src='../../images/emoji.png' catchtap='toggleEmoji' class='chatinput-img fr emoji'></image> -->
     </view>
-    <view wx:if="{{emojiFlag}}" class='chatinput-subcontent'>
+    <!-- <view wx:if="{{emojiFlag}}" class='chatinput-subcontent'>
       <component-emoji bind:EmojiClick="emojiCLick" bind:EmojiSend="emojiSend"></component-emoji>
-    </view>
+    </view> -->
     <view wx:if="{{moreFlag}}" class='more-subcontent'>
       <view style='display:flex;'>
         <view class='more-subcontent-item' catchtap='chooseImageToSend'>
@@ -104,6 +143,7 @@
           <image src="../../images/shoot.png" class='image'></image>
           <text class='text'>拍摄</text>
         </view>
+     
         <!-- <view class='more-subcontent-item'><view class='image'></view><text class='text'>文件</text></view> -->
         <!-- <view class='more-subcontent-item' catchtap='showTipMessagePanel'>
           <image src="../../images/tip.png" class='image'></image>

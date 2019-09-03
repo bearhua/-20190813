@@ -1,5 +1,5 @@
 import { showToast, calcTimeHeader, generateFingerGuessImageFile, generateBigEmojiImageFile, generateRichTextNode, generateImageNode } from '../../utils/util.js'
-import dealGroupMsg from '../../utils/dealGroupMsg.js'
+// import dealGroupMsg from '../../utils/dealGroupMsg.js'
 import { voice } from '../../utils/imageBase64.js'
 import { connect } from '../../redux/index.js'
 import * as iconBase64Map from '../../utils/imageBase64.js'
@@ -17,7 +17,7 @@ let pageConfig = {
     endTime: new Date().getTime(), // 存储上次加载的最后一条消息的时间，后续加载更多使用
     limit: 20, // 每次查询结果
     historyAllDone: false, //是否已经加载完所有历史
-    isVideoFullScreen: false
+    // isVideoFullScreen: false
   },
 
   /**
@@ -40,7 +40,7 @@ let pageConfig = {
   onPullDownRefresh() {
     if (this.data.historyAllDone) {
       wx.stopPullDownRefresh()
-      showToast('text', '别扯了，到底了！')
+      showToast('text', '到底了！')
     } else {
       this.getHistoryMsgs(false)
     }
@@ -134,28 +134,28 @@ let pageConfig = {
   /**
   * 全屏播放视频
   */
-  requestFullScreenVideo(e) {
-    let video = e.currentTarget.dataset.video
-    // console.log(video)
-    let videoContext = wx.createVideoContext('videoEle')
+  // requestFullScreenVideo(e) {
+  //   let video = e.currentTarget.dataset.video
+  //   // console.log(video)
+  //   let videoContext = wx.createVideoContext('videoEle')
 
-    this.setData({
-      isVideoFullScreen: true,
-      videoSrc: video.url,
-      videoContext
-    })
-    videoContext.requestFullScreen()
-    videoContext.play()
-  },
+  //   this.setData({
+  //     isVideoFullScreen: true,
+  //     videoSrc: video.url,
+  //     videoContext
+  //   })
+  //   videoContext.requestFullScreen()
+  //   videoContext.play()
+  // },
   /**
    * 视频播放结束钩子
    */
-  videoEnded() {
-    this.setData({
-      isVideoFullScreen: false,
-      videoSrc: ''
-    })
-  },
+  // videoEnded() {
+  //   this.setData({
+  //     isVideoFullScreen: false,
+  //     videoSrc: ''
+  //   })
+  // },
   /**
    * 距离上一条消息是否超过两分钟
    */
@@ -182,13 +182,13 @@ let pageConfig = {
     let messageArr = []
     rawMsgList.map(rawMsg => {
       let msgType = ''
-      if (rawMsg.type === 'custom' && JSON.parse(rawMsg['content'])['type'] === 1) {
-        msgType = '猜拳'
-      } else if (rawMsg.type === 'custom' && JSON.parse(rawMsg['content'])['type'] === 3) {
-        msgType = '贴图表情'
-      } else {
+      // if (rawMsg.type === 'custom' && JSON.parse(rawMsg['content'])['type'] === 1) {
+      //   msgType = '猜拳'
+      // } else if (rawMsg.type === 'custom' && JSON.parse(rawMsg['content'])['type'] === 3) {
+      //   msgType = '贴图表情'
+      // } else {
         msgType = rawMsg.type
-      }
+      // }
       let displayTimeHeader = this.judgeOverTwoMinute(rawMsg.time, messageArr)
       let sendOrReceive = rawMsg.flow === 'in' ? 'receive' : 'send'
       let specifiedObject = {}
@@ -217,26 +217,26 @@ let pageConfig = {
           }
           break
         }
-        case 'video': {
-          specifiedObject = {
-            video: rawMsg.file
-          }
-          break
-        }
-        case '猜拳': {
-          let value = JSON.parse(rawMsg['content']).data.value
-          specifiedObject = {
-            nodes: generateImageNode(generateFingerGuessImageFile(value))
-          }
-          break
-        }
-        case '贴图表情': {
-          let content = JSON.parse(rawMsg['content'])
-          specifiedObject = {
-            nodes: generateImageNode(generateBigEmojiImageFile(content))
-          }
-          break
-        }
+        // case 'video': {
+        //   specifiedObject = {
+        //     video: rawMsg.file
+        //   }
+        //   break
+        // }
+        // case '猜拳': {
+        //   let value = JSON.parse(rawMsg['content']).data.value
+        //   specifiedObject = {
+        //     nodes: generateImageNode(generateFingerGuessImageFile(value))
+        //   }
+        //   break
+        // }
+        // case '贴图表情': {
+        //   let content = JSON.parse(rawMsg['content'])
+        //   specifiedObject = {
+        //     nodes: generateImageNode(generateBigEmojiImageFile(content))
+        //   }
+        //   break
+        // }
         case 'tip': {
           specifiedObject = {
             text: rawMsg.tip,
@@ -247,36 +247,49 @@ let pageConfig = {
           }
           break
         }
-        case '白板消息':
-        case '阅后即焚': {
-          specifiedObject = {
-            nodes: [{
-              type: 'text',
-              text: `[${msgType}],请到手机或电脑客户端查看`
-            }]
+        // case '白板消息':
+        // case '阅后即焚': {
+        //   specifiedObject = {
+        //     nodes: [{
+        //       type: 'text',
+        //       text: `[${msgType}],请到手机或电脑客户端查看`
+        //     }]
+        //   }
+        //   break
+        // }
+        // case 'file':
+        // case 'robot': {
+        //   let text = msgType === 'file' ? '文件消息' : '机器人消息'
+        //   specifiedObject = {
+        //     nodes: [{
+        //       type: 'text',
+        //       text: `[${text}],请到手机或电脑客户端查看`
+        //     }]
+        //   }
+        //   break
+        // }
+        case 'custom': {
+          let content = JSON.parse(rawMsg.content) || {}
+          let text = sendOrReceive === 'receive' ? '收到' : '发送'
+          if (content.type === 8 && (content.data.type === "newhouse" || content.data.type === "secondhouse")) {
+            specifiedObject = {
+              nodes: [{
+                type: 'text',
+                text: `${text}了一条不支持的消息，请前往淘房APP查看!`
+              }]
+            }
           }
           break
         }
-        case 'file':
-        case 'robot': {
-          let text = msgType === 'file' ? '文件消息' : '机器人消息'
-          specifiedObject = {
-            nodes: [{
-              type: 'text',
-              text: `[${text}],请到手机或电脑客户端查看`
-            }]
-          }
-          break
-        }
-        case 'notification':
-          specifiedObject = {
-            text: rawMsg.groupNotification || (rawMsg.text.length == 0 ? '通知' : rawMsg.text),
-            nodes: [{
-              type: 'text',
-              text: rawMsg.groupNotification || (rawMsg.text.length == 0 ? '通知' : rawMsg.text)
-            }]
-          }
-          break;
+        // case 'notification':
+        //   specifiedObject = {
+        //     text: rawMsg.groupNotification || (rawMsg.text.length == 0 ? '通知' : rawMsg.text),
+        //     nodes: [{
+        //       type: 'text',
+        //       text: rawMsg.groupNotification || (rawMsg.text.length == 0 ? '通知' : rawMsg.text)
+        //     }]
+        //   }
+        //   break;
         default: {
           break
         }
@@ -287,7 +300,9 @@ let pageConfig = {
         from: rawMsg.from,
         time: rawMsg.time,
         sendOrReceive,
-        displayTimeHeader
+        displayTimeHeader,
+        content: rawMsg.content || {},//365 卡片内容
+        msg: rawMsg//365 完整的信息，用来查询消息是否已读,
       }, specifiedObject))
     })
     return messageArr

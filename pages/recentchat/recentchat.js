@@ -29,6 +29,8 @@ let pageConfig = {
       // account: this.data.account
       token: '016e7e473499d30ea2536a89fade8fa5',
       account: 'tf_1679'
+      // token: '39230932f4690a00efa568a1a07fae6e',
+      // account: 'tf_3274209'
     })
     // 条目题目展示我的电脑
     this.setData({
@@ -205,7 +207,7 @@ let pageConfig = {
     app.globalData.nim.resetSessionUnread(session)
     // 跳转
     wx.navigateTo({
-      url: `../../partials/chating/chating?chatTo=${account}&type=${chatType}`,
+      url: `../../pages/chating/chating?chatTo=${account}&type=${chatType}`,
     })
   },
   /**
@@ -233,33 +235,55 @@ let pageConfig = {
     } else if (rawMsg.type === 'geo') {
       msgType = '[位置]'
     } else if (rawMsg.type === 'audio') {
-      msgType = '[语音]'
-    } else if (rawMsg.type === 'video') {
-      msgType = '[视频]'
+      msgType = '[语音信息]'
+    // } else if (rawMsg.type === 'video') {
+    //   msgType = '[视频]'
     } else if (rawMsg.type === 'custom') {
-      msgType = rawMsg.pushContent || '[自定义消息]'
+      console.log('custom', rawMsg.pushContent)
+      msgType = '['+rawMsg.pushContent+']' || '[自定义消息]'
     } else if (rawMsg.type === 'tip') {
       msgType = '[提醒消息]'
     } else if (rawMsg.type === 'deleteMsg') {//可能是他人撤回消息
       msgType = '[提醒消息]'
-    } else if (rawMsg.type === 'file') {
-      msgType = '[文件消息]'
-    } else if (rawMsg.type === '白板消息') {
-      msgType = '[白板消息]'
-    } else if (rawMsg.type === '阅后即焚') {
-      msgType = '[阅后即焚]'
-    } else if (rawMsg.type === 'robot') {
-      msgType = '[机器人消息]'
-    } else if (rawMsg.type === 'notification') {
-      msgType = '[通知消息]'
+    // } else if (rawMsg.type === 'file') {
+    //   msgType = '[文件消息]'
+    // } else if (rawMsg.type === '白板消息') {
+    //   msgType = '[白板消息]'
+    // } else if (rawMsg.type === '阅后即焚') {
+    //   msgType = '[阅后即焚]'
+    // } else if (rawMsg.type === 'robot') {
+    //   msgType = '[机器人消息]'
+    // } else if (rawMsg.type === 'notification') {
+    //   msgType = '[通知消息]'
     }
     return msgType
+  },
+  /**
+   * 判断用户身份  identity==1:安家顾问；2：经纪人；3：房博士；4：普通淘房会员
+   */
+  judgeAccountType(identity){
+    switch(identity) {
+      case 1: {
+        return '安家顾问'
+      }
+      case 2: {
+        return '经纪人'
+      }
+      case 3: {
+        return '房博士'
+      }
+      case 4: {
+        return '普通淘房会员'
+      }
+      default:{
+        return ''
+      }
+    }
   },
   /**
    * 将原生消息转化为最近会话列表渲染数据
    */
   convertRawMessageListToRenderChatList(rawMessageList, friendCard, groupList, unreadInfo) {
-    console.log('rawMessageList', rawMessageList );
     let chatList = []
     let sessions = Object.keys(rawMessageList)
     let index = 0
@@ -272,27 +296,31 @@ let pageConfig = {
       if (!unixtimeList) {
         return
       }
+      console.log('rawMessageList', sessionCard)
       let maxTime = Math.max(...unixtimeList)
       // console.log('sessionCard,friendCard[account]', friendCard[account], groupList[account])
       if (maxTime) {
         let msg = rawMessageList[session][maxTime + ''] || {}
         let msgType = this.judgeMessageType(msg)
         let lastestMsg = msgType
-        let status =  isP2p ?  (sessionCard.status || '离线') : ''
-        let nick = isP2p ? (sessionCard.nick || '非好友') : sessionCard.name
+        // let status =  isP2p ?  (sessionCard.status || '离线') : ''
+        let nick = isP2p ? (sessionCard.nick) : sessionCard.name
         let avatar = sessionCard.avatar || app.globalData.PAGE_CONFIG.defaultUserLogo
+        let identity = ''
+        if (sessionCard.custom) identity = this.judgeAccountType(JSON.parse(sessionCard.custom).identity) || ''
         chatList.push({
           chatType,
           session,
           account,
-          status,  
+          // status,  
           nick,
           avatar,
           lastestMsg: lastestMsg || msg.text,
           type: msgType || msg.type,
           timestamp: msg.time,
           unread: unreadInfo[session] || 0,
-          displayTime: msg.time ? calcTimeHeader(msg.time) : ''
+          displayTime: msg.time ? calcTimeHeader(msg.time) : '',
+          identity: identity//365 身份信息  
         })
       }
     })
@@ -332,15 +360,15 @@ let pageConfig = {
   // }
 }
 let mapStateToData = (state) => {
-  console.log(state)
+  console.log('state',state)
   let chatList = pageConfig.convertRawMessageListToRenderChatList(state.rawMessageList, state.friendCard, state.groupList, state.unreadInfo)
   // let latestNotification = pageConfig.caculateLastestNotification(state.notificationList)
   return {
-    rawMessageList: state.rawMessageList,
+    // rawMessageList: state.rawMessageList,
     userInfo: state.userInfo,
-    friendCard: state.friendCard,
-    groupList: state.groupList,
-    unreadInfo: state.unreadInfo,
+    // friendCard: state.friendCard,
+    // groupList: state.groupList,
+    // unreadInfo: state.unreadInfo,
     chatList: chatList,
     // latestNotification
   }
