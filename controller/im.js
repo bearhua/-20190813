@@ -213,7 +213,7 @@ export default class IMController {
     try {
       store.dispatch({
         type: 'UnreadInfo_update',
-        payload: session
+        payload: { session, nim: app.globalData.nim }
       })
     } catch (error) {
     }

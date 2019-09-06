@@ -1,23 +1,23 @@
-import {INITIAL_STATE} from './store.js'
+import { INITIAL_STATE } from './store.js'
 // import dealGroupMsg from '../utils/dealGroupMsg.js'
 // let app = getApp()
 let indexReducer = (state = INITIAL_STATE, action) => {
   const app = getApp()
   switch (action.type) {
     // IM：收到个人信息
-    case 'IM_OnMyInfo':{
+    case 'IM_OnMyInfo': {
       return Object.assign({}, state, {
         userInfo: action.payload
       })
     }
     // Login：开始登陆，转菊花
-    case 'Login_StartLogin':{
+    case 'Login_StartLogin': {
       return Object.assign({}, state, {
         isLogin: true
       })
     }
     // Login：登陆成功，停止转菊花
-    case 'Login_LoginSuccess':{
+    case 'Login_LoginSuccess': {
       return Object.assign({}, state, {
         isLogin: false
       })
@@ -189,7 +189,7 @@ let indexReducer = (state = INITIAL_STATE, action) => {
     //   tempState.friendCard[blackUser.account].addTime = blackUser.addTime
     //   return Object.assign({}, state, tempState)
     // }
-    
+
     // RawMessageList：存储漫游消息
     case 'RawMessageList_Add_RoamingMsgList': {
       let tempState = Object.assign({}, state)
@@ -314,10 +314,10 @@ let indexReducer = (state = INITIAL_STATE, action) => {
     // }
     // Notification：对端将你从好友列表中删除
     // case 'Notification_Team_Del': {
-      // let tempState = Object.assign({}, state)
-      // let payload = action.payload
-      // tempState.notificationList.system.push(payload)
-      // return Object.assign({}, state, tempState)
+    // let tempState = Object.assign({}, state)
+    // let payload = action.payload
+    // tempState.notificationList.system.push(payload)
+    // return Object.assign({}, state, tempState)
     // }
     // Notification：清除指定条目的系统消息通知
     // case 'Notification_Delete_Specified_System_By_Index': {
@@ -405,9 +405,8 @@ let indexReducer = (state = INITIAL_STATE, action) => {
     // UnreadInfo：更新未读数
     case 'UnreadInfo_update': {
       let tempState = Object.assign({}, state)
-      let updateSession = action.payload
+      let { session: updateSession, nim } = action.payload
       tempState.unreadInfo[updateSession.id] = updateSession.unread
-      
       //House365 总未读数更新
       let unreadTotal = 0;
       for (let item in tempState.unreadInfo) {
@@ -415,9 +414,10 @@ let indexReducer = (state = INITIAL_STATE, action) => {
       }
       app.setTotalUnread(unreadTotal);
       console.log('更新未读数', tempState.unreadInfo, unreadTotal)
-
-      console.log('更新已读回执', updateSession.id, tempState.rawMessageList[updateSession.id])
-      
+      tempState.markMsgRead['idClient'] = updateSession.lastMsg['idClient'] || ''
+      tempState.markMsgRead['isReaded'] = nim.isMsgRemoteRead(updateSession.lastMsg)
+      console.log('更新已读回执,markMsgRead', tempState.markMsgRead)
+      //已读回执
       return Object.assign({}, state, tempState)
     }
     // UnreadInfo：更新群未读数
@@ -458,7 +458,7 @@ let indexReducer = (state = INITIAL_STATE, action) => {
     case 'Reset_All_State': {
       let tempState = Object.assign({}, state)
       let keysArr = Object.keys(tempState)
-      console.log("========",keysArr)
+      console.log("========", keysArr)
       keysArr.map(item => {
         if (Array.isArray(tempState[item])) {
           tempState[item] = []
@@ -467,7 +467,7 @@ let indexReducer = (state = INITIAL_STATE, action) => {
         } else if (typeof tempState[item] === 'boolean') {
           tempState[item] = false
         } else if (typeof tempState[item] === 'string') {
-          tempState[item]  = ''
+          tempState[item] = ''
         }
       })
       // tempState.notificationList = { system: [], custom: [] }

@@ -41,7 +41,7 @@
       </view>
       <!--send 发送的消息-->
       <view wx:if="{{message.sendOrReceive == 'send'}}" class='{{message.sendOrReceive == "send" ? "record-chatting-item self" : ""}}' style='justify-content: {{message.type === "tip" || message.type === "notification" ? "center" : "flex-end"}}' data-message="{{message}}" bindlongpress='showEditorMenu'>
-        <view wx:if="{{message.isReaded}}" class="record-chatting-item-unread">已读 </view>
+        <view wx:if="{{markMsgRead.idClient && markMsgRead.idClient == message.idClient}}" class="record-chatting-item-unread">{{markMsgRead.isReaded?'已读':''}} </view>
         <view wx:if="{{message.type === 'geo'}}" data-geo='{{message.geo}}' class='small-map-wrapper' catchtap='fullScreenMap'>
           <image src="../../images/map.png" class='small-geo-img'></image>
           <text class='text'>{{message.geo.title}}</text>

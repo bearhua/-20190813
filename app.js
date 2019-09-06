@@ -29,12 +29,11 @@ App(
           }catch(e) {
           }
         }
-        // this.setTotalUnread('100')
       },
       onLaunch: function (e) {
-        let userInfo = wx.getStorageSync('userInfo')
-        if (userInfo) {
-          this.globalData.userInfo = userInfo
+        let imUserInfo = wx.getStorageSync('imUserInfo')
+        if (imUserInfo) {
+          this.globalData.imUserInfo = imUserInfo
         }
         // let systemInfo = wx.getSystemInfoSync()
         // this.globalData.videoContainerSize = {

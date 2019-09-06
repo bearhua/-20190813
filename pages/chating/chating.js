@@ -1,6 +1,6 @@
 import { connect } from '../../redux/index.js'
 // import { generateFingerGuessImageFile, generateBigEmojiImageFile, generateRichTextNode, generateImageNode, calcTimeHeader } from '../../utils/util.js'
-import {generateBigEmojiImageFile, generateRichTextNode, generateImageNode, calcTimeHeader } from '../../utils/util.js'
+import { generateBigEmojiImageFile, generateRichTextNode, generateImageNode, calcTimeHeader } from '../../utils/util.js'
 import { showToast, deepClone, clickLogoJumpToCard } from '../../utils/util.js'
 import * as iconBase64Map from '../../utils/imageBase64.js'
 
@@ -31,7 +31,7 @@ let pageConfig = {
     inputValue: '',//文本框输入内容
     from: '',
     //<div class="tfim-winchart-content tfim-winchart-content-custom">
-			// < div class= "tfim-winchart-content tfim-winchart-content-custom" > <a href="https://m.house365.com/baihongfudong1hao/" target="_blank"> <div class="tfim-winchart-content-card-l"> <img src="http://img27.house365.com/njnewhouse/2015/03/28/thumb/142753232555166a25164b2.jpg"> </div> <div class="tfim-winchart-content-card-r"> <div class="tfim-winchart-content-card-title tfim_line2">百宏府东1号</div> <div class="tfim-winchart-content-card-place tfimline1">住宅  石狮市</div> <div class="tfim-winchart-content-card-price tfimline1"><span>8500元</span>/㎡</div> </div> </a> </div>
+    // < div class= "tfim-winchart-content tfim-winchart-content-custom" > <a href="https://m.house365.com/baihongfudong1hao/" target="_blank"> <div class="tfim-winchart-content-card-l"> <img src="http://img27.house365.com/njnewhouse/2015/03/28/thumb/142753232555166a25164b2.jpg"> </div> <div class="tfim-winchart-content-card-r"> <div class="tfim-winchart-content-card-title tfim_line2">百宏府东1号</div> <div class="tfim-winchart-content-card-place tfimline1">住宅  石狮市</div> <div class="tfim-winchart-content-card-price tfimline1"><span>8500元</span>/㎡</div> </div> </a> </div>
     // arr : [{
     //   name:"div",
     //   attrs: {
@@ -74,7 +74,7 @@ let pageConfig = {
     //               text: '【世贸外滩新城】15#标准层       C2户   型'
     //             }]
     //           },
-              
+
     //           {
     //             name: 'div',
     //             attrs: {
@@ -139,11 +139,11 @@ let pageConfig = {
     //     this.getMemberList(chatTo)
     //   }
     // } else { // p2p
-      let card = this.data.friendCard[chatTo] || {}
-      console.log(this.data.friendCard)
-      wx.setNavigationBarTitle({
-        title: card.nick || chatTo,
-      })
+    let card = this.data.friendCard[chatTo] || {}
+    console.log(this.data.friendCard)
+    wx.setNavigationBarTitle({
+      title: card.nick || chatTo,
+    })
     // }
     this.setData({
       chatTo,
@@ -152,12 +152,11 @@ let pageConfig = {
       iconBase64Map: iconBase64Map,
       chatWrapperMaxHeight,
     })
-   
+
 
     // 重新计算所有时间
     self.reCalcAllMessageTime()
-    //计算已读回执
-    self.queryIsMsgRemoteRead()
+
     // 滚动到底部
     self.scrollToBottom()
     // app.globalData.emitter.on('callRejected', (data) => {
@@ -634,22 +633,7 @@ let pageConfig = {
       messageArr: tempArr
     })
   },
-  /**
-   * House365 查询消息是否已被对方读过
-   */
-  queryIsMsgRemoteRead(){
-    let tempArr = [...this.data.messageArr]
-    if(tempArr.length == 0) return
-    // app.globalData.nim.isMsgRemoteRead(msg)
-    tempArr.map((msg, index) => {
-      msg['isReaded'] = app.globalData.nim.isMsgRemoteRead(msg.msg)
-      console.log('isMsgRemoteRead',msg.msg, app.globalData.nim.isMsgRemoteRead(msg.msg))
-    })
-    
-    this.setData({
-      messageArr: tempArr
-    })
-  },
+
   /**
    * 切换发送文本类型
    */
@@ -1040,8 +1024,8 @@ let pageConfig = {
    */
   lookMessage() {
     let self = this
-    let actionArr = ['清空本地聊天记录', '查看云消息记录']
-    let actionFn = [self.sureToClearAllMessage, self.lookAllMessage]
+    let actionArr = ['查看云消息记录']
+    let actionFn = [self.lookAllMessage]
     if (this.data.currentGroup.isCurrentNotIn) {
       actionArr.pop()
     }
@@ -1086,18 +1070,18 @@ let pageConfig = {
   /**
    * 弹框 确认 清除本地记录
    */
-  sureToClearAllMessage() {
-    let self = this
-    wx.showActionSheet({//二次确认
-      itemList: ['清空'],
-      itemColor: '#f00',
-      success: (res) => {
-        if (res.tapIndex == 0) {
-          self.clearAllMessage()
-        }
-      }
-    })
-  },
+  // sureToClearAllMessage() {
+  //   let self = this
+  //   wx.showActionSheet({//二次确认
+  //     itemList: ['清空'],
+  //     itemColor: '#f00',
+  //     success: (res) => {
+  //       if (res.tapIndex == 0) {
+  //         self.clearAllMessage()
+  //       }
+  //     }
+  //   })
+  // },
   /**
    * 查看云消息记录
    */
@@ -1110,7 +1094,7 @@ let pageConfig = {
    * 清除本地记录
    */
   clearAllMessage() {
-      // 刷新本地视图
+    // 刷新本地视图
     this.setData({
       messageArr: []
     })
@@ -1135,16 +1119,13 @@ let pageConfig = {
     let self = this
     if (message.sendOrReceive === 'send') { // 自己消息
       wx.showActionSheet({
-        itemList: ['删除', '转发', '撤回'],
+        itemList: ['撤回'],
         success: function (res) {
           switch (res.tapIndex) {
+            // case 0:
+            //   self.deleteMessageRecord(message)
+            //   break
             case 0:
-              self.deleteMessageRecord(message)
-              break
-            case 1:
-              self.forwardMessage(paraObj)
-              break
-            case 2:
               wx.showActionSheet({
                 itemList: ['确定'],
                 itemColor: '#ff0000',
@@ -1160,23 +1141,21 @@ let pageConfig = {
           }
         }
       })
-    } else {// 对方消息
-      wx.showActionSheet({
-        itemList: ['删除', '转发'],
-        success: function (res) {
-          switch (res.tapIndex) {
-            case 0:
-              self.deleteMessageRecord(message)
-              break
-            case 1:
-              self.forwardMessage(paraObj)
-              break
-            default:
-              break
-          }
-        }
-      })
     }
+    //  else {// 对方消息
+    //   wx.showActionSheet({
+    //     itemList: ['删除'],
+    //     success: function (res) {
+    //       switch (res.tapIndex) {
+    //         case 0:
+    //           self.deleteMessageRecord(message)
+    //           break
+    //         default:
+    //           break
+    //       }
+    //     }
+    //   })
+    // }
   },
   /**
    * 转发消息
@@ -1217,14 +1196,14 @@ let pageConfig = {
    * 删除消息
    * {displayTimeHeader,nodes,sendOrReceive,text,time,type}
    */
-  deleteMessageRecord(msg) {
-    let sessionId = (this.data.chatType === 'p2p' ? 'p2p-' : 'team-') + this.data.chatTo
-    // 从全局记录中删除
-    store.dispatch({
-      type: 'Delete_Single_MessageByAccount',
-      payload: { sessionId: sessionId, time: msg.time }
-    })
-  },
+  // deleteMessageRecord(msg) {
+  //   let sessionId = (this.data.chatType === 'p2p' ? 'p2p-' : 'team-') + this.data.chatTo
+  //   // 从全局记录中删除
+  //   store.dispatch({
+  //     type: 'Delete_Single_MessageByAccount',
+  //     payload: { sessionId: sessionId, time: msg.time }
+  //   })
+  // },
   /**
    * 距离上一条消息是否超过两分钟
    */
@@ -1249,7 +1228,7 @@ let pageConfig = {
    */
   convertRawMessageListToRenderMessageArr(rawMsgList) {
     let messageArr = []
-    for(let time in rawMsgList) {
+    for (let time in rawMsgList) {
       let rawMsg = rawMsgList[time]
       let msgType = ''
       // if (rawMsg.type === 'custom' && JSON.parse(rawMsg['content'])['type'] === 1) {
@@ -1257,12 +1236,12 @@ let pageConfig = {
       // } else if (rawMsg.type === 'custom' && JSON.parse(rawMsg['content'])['type'] === 3) {
       //   msgType = '贴图表情'
       // } else {
-        msgType = rawMsg.type
+      msgType = rawMsg.type
       // }
       let displayTimeHeader = this.judgeOverTwoMinute(rawMsg.time, messageArr)
       let sendOrReceive = rawMsg.flow === 'in' ? 'receive' : 'send'
       let specifiedObject = {}
-      switch(msgType) {
+      switch (msgType) {
         case 'text': {
           specifiedObject = {
             nodes: generateRichTextNode(rawMsg.text)
@@ -1340,8 +1319,8 @@ let pageConfig = {
         // }
         case 'custom': {
           let content = JSON.parse(rawMsg.content) || {}
-          let text = sendOrReceive === 'receive' ?'收到':'发送'
-          if (content.type === 8 && (content.data.type === "newhouse" || content.data.type === "secondhouse")){
+          let text = sendOrReceive === 'receive' ? '收到' : '发送'
+          if (content.type === 8 && (content.data.type === "newhouse" || content.data.type === "secondhouse")) {
             specifiedObject = {
               nodes: [{
                 type: 'text',
@@ -1373,8 +1352,8 @@ let pageConfig = {
         time,
         sendOrReceive,
         displayTimeHeader,
-        content : rawMsg.content || {},//365 卡片内容
-        msg : rawMsg//365 完整的信息，用来查询消息是否已读,
+        content: rawMsg.content || {},//House365 卡片内容
+        idClient: rawMsg.idClient//House365 用于标识消息的key
       }, specifiedObject))
     }
     return messageArr
@@ -1402,9 +1381,10 @@ let mapStateToData = (state) => {
     groupList: state.groupList,
     groupMemberList: state.groupMemberList,
     rawMessageList: state.rawMessageList,
-    messageArr: messageArr
+    messageArr: messageArr,
+    markMsgRead: state.markMsgRead//House365 已读回执
   }
 }
-const mapDispatchToPage = (dispatch) => {}
+const mapDispatchToPage = (dispatch) => { }
 let connectedPageConfig = connect(mapStateToData, mapDispatchToPage)(pageConfig)
 Page(connectedPageConfig)

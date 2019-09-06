@@ -18,6 +18,7 @@ const INITIAL_STATE = {
   // netcallEvent: {type: '', payload: null}, // 音视频事件载荷
   // netcallCallList: [], // 多人通话呼叫列表
   // netcallGroupCallInfo: {} // 群组音视频被叫时通知信息
+  markMsgRead: {}//{ idClient:'', isReaded: false} 标记消息是否已读
 }
 
 export {INITIAL_STATE}
